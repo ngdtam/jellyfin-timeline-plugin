@@ -1,0 +1,40 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="#667eea" stroke="#5a6fd8" stroke-width="4"/>
+  
+  <!-- Timeline line -->
+  <line x1="40" y1="128" x2="216" y2="128" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  
+  <!-- Timeline points -->
+  <circle cx="70" cy="128" r="8" fill="white"/>
+  <circle cx="110" cy="128" r="8" fill="white"/>
+  <circle cx="150" cy="128" r="8" fill="white"/>
+  <circle cx="190" cy="128" r="8" fill="white"/>
+  
+  <!-- Movie/TV icons -->
+  <!-- Movie icon (film strip) -->
+  <rect x="55" y="100" width="30" height="20" rx="3" fill="white" opacity="0.9"/>
+  <rect x="58" y="103" width="4" height="14" fill="#667eea"/>
+  <rect x="65" y="103" width="4" height="14" fill="#667eea"/>
+  <rect x="72" y="103" width="4" height="14" fill="#667eea"/>
+  <rect x="79" y="103" width="4" height="14" fill="#667eea"/>
+  
+  <!-- TV icon -->
+  <rect x="135" y="100" width="30" height="20" rx="3" fill="white" opacity="0.9"/>
+  <rect x="138" y="103" width="24" height="14" rx="1" fill="#667eea"/>
+  <circle cx="162" cy="125" r="2" fill="white"/>
+  
+  <!-- Universe/stars -->
+  <circle cx="80" cy="80" r="2" fill="white" opacity="0.7"/>
+  <circle cx="180" cy="80" r="2" fill="white" opacity="0.7"/>
+  <circle cx="60" cy="180" r="2" fill="white" opacity="0.7"/>
+  <circle cx="200" cy="180" r="2" fill="white" opacity="0.7"/>
+  <circle cx="40" cy="60" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="220" cy="60" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="30" cy="200" r="1.5" fill="white" opacity="0.5"/>
+  <circle cx="230" cy="200" r="1.5" fill="white" opacity="0.5"/>
+  
+  <!-- Title text -->
+  <text x="128" y="200" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="16" font-weight="bold">TIMELINE</text>
+  <text x="128" y="220" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-size="12" opacity="0.9">MANAGER</text>
+</svg>
