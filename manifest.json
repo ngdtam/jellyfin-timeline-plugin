@@ -1,19 +1,30 @@
-{
-  "guid": "12345678-1234-5678-9abc-123456789012",
-  "name": "Universal Timeline Manager",
-  "description": "Creates and maintains chronological playlists for cinematic universes based on JSON configuration files.",
-  "overview": "Automatically creates chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) with Provider_ID matching and mixed content support.",
-  "owner": "ngdtam",
-  "category": "General",
-  "imageUrl": "https://raw.githubusercontent.com/ngdtam/jellyfin-timeline-plugin/main/images/logo.png",
-  "versions": [
-    {
-      "version": "1.1.0.0",
-      "changelog": "Added comprehensive web UI for drag-and-drop timeline configuration. No more manual JSON editing required!",
-      "targetAbi": "10.11.6.0",
-      "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.0/Jellyfin.Plugin.TimelineManager.dll",
-      "checksum": "AC7AA16EB92B1E005206F2AF0D30FD649590B25764D23DA9910B29F63EBD45A1",
-      "timestamp": "2025-01-22T00:00:00Z"
-    }
-  ]
-}
+[
+  {
+    "guid": "12345678-1234-5678-9abc-123456789012",
+    "name": "Universal Timeline Manager",
+    "overview": "Chronological playlists for cinematic universes in Jellyfin with drag-and-drop web interface.",
+    "description": "Automatically creates and maintains chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) based on JSON configuration files or visual web interface. Features drag-and-drop timeline creation, Provider_ID matching with TMDB/IMDB, mixed content support (movies + TV episodes), and comprehensive error handling. No more manual JSON editing - use the intuitive web UI directly in Jellyfin!",
+    "owner": "ngdtam",
+    "category": "General",
+    "imageUrl": "https://raw.githubusercontent.com/ngdtam/jellyfin-timeline-plugin/main/images/logo.png",
+    "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
+    "versions": [
+      {
+        "version": "1.1.0.0",
+        "changelog": "## What's Changed\n\n### ✨ New Features\n- **🎨 Visual Web Interface** — Complete drag-and-drop timeline configuration directly in Jellyfin\n- **📚 Library Integration** — Browse all movies and TV shows with Provider IDs displayed\n- **🔍 Smart Search** — Find content quickly with real-time search functionality\n- **📱 Mobile-Responsive Design** — Works perfectly on phones, tablets, and desktops\n\n### 🚀 User Experience Improvements\n- **No Technical Knowledge Required** — Perfect for non-tech-savvy users\n- **Instant Visual Feedback** — See your timeline as you build it\n- **Error Prevention** — Built-in validation prevents duplicate items\n- **One-Click Operations** — Save configuration and run tasks with single clicks\n\n### 🔧 Technical Enhancements\n- **RESTful API Integration** — Seamless communication with Jellyfin\n- **Real-Time Configuration Updates** — Changes are reflected immediately\n- **Enhanced Error Handling** — Better user feedback for all operations\n- **Performance Optimizations** — Faster loading and smoother interactions\n\n**Full Changelog**: https://github.com/ngdtam/jellyfin-timeline-plugin/compare/v1.0.0...v1.1.0",
+        "targetAbi": "10.11.6.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.0/Jellyfin.Plugin.TimelineManager.dll",
+        "checksum": "AC7AA16EB92B1E005206F2AF0D30FD649590B25764D23DA9910B29F63EBD45A1",
+        "timestamp": "2025-01-22T12:00:00Z"
+      },
+      {
+        "version": "1.0.0.0",
+        "changelog": "## What's Changed\n\n### ✨ New Features\n- **Multiple Universe Support** — Configure unlimited cinematic universes\n- **Mixed Content Types** — Movies and TV episodes in same playlist\n- **Provider_ID Matching** — TMDB and IMDB identifiers for accuracy\n- **Error Resilience** — Graceful handling of missing items\n- **Performance Optimized** — O(1) lookup for large libraries\n- **Comprehensive Logging** — Detailed troubleshooting support\n\n### 🧪 Quality Assurance\n- **11 Property-based tests** validating correctness properties\n- **Integration tests** for end-to-end workflows\n- **Error scenario testing** for resilience and recovery\n- **Performance testing** for large media libraries\n\n**Full Changelog**: Initial release with complete feature set",
+        "targetAbi": "10.11.6.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.0.0/Jellyfin.Plugin.TimelineManager.dll",
+        "checksum": "76CF88B9C72AB0DACC8BBA5344639D27D7F76B92A483DE78BD6441CB008F38D2",
+        "timestamp": "2025-01-22T00:00:00Z"
+      }
+    ]
+  }
+]
