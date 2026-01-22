@@ -4,6 +4,8 @@
 
 Universal Timeline Manager automatically creates and maintains chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) based on JSON configuration files. Your media stays exactly where it is, but gets organized into perfect viewing order playlists.
 
+**🎉 NEW in v1.1.0: Web UI Configuration!** No more manual JSON editing - use the intuitive drag-and-drop interface directly in Jellyfin!
+
 ```
 /config/timeline_manager_config.json    ← Configuration file
 {
@@ -27,7 +29,10 @@ Jellyfin Playlists:                      ← Automatically created playlists
 
 ## Features
 
-- **Multiple Universe Support** — Configure unlimited cinematic universes in a single JSON file
+- **🎨 Visual Web Interface** — Drag-and-drop timeline creation directly in Jellyfin (NEW!)
+- **📚 Library Integration** — Browse all your movies and TV shows with Provider IDs displayed
+- **🔍 Smart Search** — Find content quickly with real-time search functionality
+- **Multiple Universe Support** — Configure unlimited cinematic universes in a single interface
 - **Mixed Content Types** — Movies and TV episodes together in the same chronological playlist
 - **Provider_ID Matching** — Uses TMDB and IMDB identifiers for 100% accurate content matching
 - **Chronological Ordering** — Maintains perfect timeline order as specified in your configuration
@@ -64,7 +69,16 @@ Download from [Releases](https://github.com/ngdtam/jellyfin-timeline-plugin/rele
 
 ## Quick Start
 
-### 1. Create Configuration File
+### 🎨 Method 1: Web Interface (Recommended)
+
+1. **Go to Jellyfin Admin** → **Plugins** → **Universal Timeline Manager**
+2. **Browse your library** - All movies and TV shows with Provider IDs are displayed
+3. **Create universes** - Click "Add New Universe" and give it a name
+4. **Drag and drop** - Drag movies/episodes into your universe timeline
+5. **Save and run** - Click "Save Configuration" then "Run Timeline Task"
+6. **Enjoy!** - Your playlists appear in Jellyfin automatically
+
+### ⚙️ Method 2: JSON Configuration (Advanced)
 
 Create `/config/timeline_manager_config.json` in your Jellyfin config directory:
 
