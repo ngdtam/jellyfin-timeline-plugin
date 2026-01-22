@@ -10,6 +10,14 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
+        "version": "1.2.2.0",
+        "changelog": "## v1.2.2 - JavaScript Compatibility Fix\n\n### 🔧 Fixes\n- **Fixed JavaScript Execution** — Rewrote script to use ES5 syntax for better compatibility\n- **Fixed Page Load Event** — Now uses window.load instead of pageshow\n- **Removed async/await** — Using promises for broader browser support\n\n**Buttons should now work properly!**",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.2/jellyfin-timeline-manager-v1.2.2.zip",
+        "checksum": "9D6651E344F2663E702F62E8ACAE6F5B",
+        "timestamp": "2026-01-22T20:00:00Z"
+      },
+      {
         "version": "1.2.1.0",
         "changelog": "## v1.2.1 - UI Fixes\n\n### 🔧 Fixes\n- **Fixed Load Sample Button** — Now properly loads sample configuration\n- **Fixed Validate/Save Buttons** — Messages now display correctly\n- **Fixed Textarea Cursor** — Proper padding and styling for text input\n- **Added Console Logging** — Better debugging for API calls\n\n**All UI interactions now working properly!**",
         "targetAbi": "10.10.0.0",

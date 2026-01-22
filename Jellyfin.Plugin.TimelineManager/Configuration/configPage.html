@@ -82,15 +82,19 @@
     </div>
 
     <script type="text/javascript">
-        (function() {
-            console.log('Timeline Config Page Script Loading...');
+        window.PluginConfig = {
+            pluginId: "12345678-1234-5678-9abc-123456789012"
+        };
+
+        window.addEventListener('load', function() {
+            console.log('Window loaded, initializing Timeline Config...');
             
-            const page = document.querySelector('#timelineConfigPage');
-            const jsonEditor = document.querySelector('#jsonEditor');
-            const validateBtn = document.querySelector('#validateBtn');
-            const saveBtn = document.querySelector('#saveBtn');
-            const loadSampleBtn = document.querySelector('#loadSampleBtn');
-            const messageContainer = document.querySelector('#messageContainer');
+            var page = document.querySelector('#timelineConfigPage');
+            var jsonEditor = document.querySelector('#jsonEditor');
+            var validateBtn = document.querySelector('#validateBtn');
+            var saveBtn = document.querySelector('#saveBtn');
+            var loadSampleBtn = document.querySelector('#loadSampleBtn');
+            var messageContainer = document.querySelector('#messageContainer');
 
             console.log('Elements found:', {
                 page: !!page,
@@ -101,7 +105,12 @@
                 messageContainer: !!messageContainer
             });
 
-            const sampleConfig = {
+            if (!jsonEditor || !validateBtn || !saveBtn || !loadSampleBtn) {
+                console.error('Required elements not found!');
+                return;
+            }
+
+            var sampleConfig = {
                 "universes": [
                     {
                         "key": "mcu",
@@ -146,113 +155,114 @@
                 messageContainer.style.display = 'none';
             }
 
-            async function loadConfiguration() {
+            function loadConfiguration() {
                 console.log('Loading configuration...');
-                try {
-                    const response = await fetch('/api/timeline/config');
-                    console.log('Config response status:', response.status);
-                    const config = await response.json();
-                    console.log('Config loaded:', config);
-                    
-                    if (config && config.universes && config.universes.length > 0) {
-                        jsonEditor.value = JSON.stringify(config, null, 2);
-                    } else {
+                fetch('/api/timeline/config')
+                    .then(function(response) {
+                        console.log('Config response status:', response.status);
+                        return response.json();
+                    })
+                    .then(function(config) {
+                        console.log('Config loaded:', config);
+                        if (config && config.universes && config.universes.length > 0) {
+                            jsonEditor.value = JSON.stringify(config, null, 2);
+                        } else {
+                            jsonEditor.value = JSON.stringify(sampleConfig, null, 2);
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Error loading configuration:', error);
                         jsonEditor.value = JSON.stringify(sampleConfig, null, 2);
-                    }
-                } catch (error) {
-                    console.error('Error loading configuration:', error);
-                    jsonEditor.value = JSON.stringify(sampleConfig, null, 2);
-                }
+                    });
             }
 
-            async function validateConfiguration() {
+            function validateConfiguration() {
                 console.log('Validate button clicked');
                 hideMessage();
                 
+                var jsonContent = jsonEditor.value.trim();
+                console.log('JSON content length:', jsonContent.length);
+                
+                if (!jsonContent) {
+                    showMessage('Please enter a configuration to validate', true);
+                    return;
+                }
+
                 try {
-                    const jsonContent = jsonEditor.value.trim();
-                    console.log('JSON content length:', jsonContent.length);
-                    
-                    if (!jsonContent) {
-                        showMessage('Please enter a configuration to validate', true);
-                        return;
-                    }
+                    JSON.parse(jsonContent);
+                } catch (e) {
+                    console.error('JSON parse error:', e);
+                    showMessage('<strong>JSON Syntax Error:</strong><br>' + e.message, true);
+                    return;
+                }
 
-                    // Test JSON parsing first
-                    try {
-                        JSON.parse(jsonContent);
-                    } catch (e) {
-                        console.error('JSON parse error:', e);
-                        showMessage('<strong>JSON Syntax Error:</strong><br>' + e.message, true);
-                        return;
-                    }
-
-                    console.log('Sending validation request...');
-                    const response = await fetch('/api/timeline/validate', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ jsonContent: jsonContent })
-                    });
-
+                console.log('Sending validation request...');
+                fetch('/api/timeline/validate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ jsonContent: jsonContent })
+                })
+                .then(function(response) {
                     console.log('Validation response status:', response.status);
-                    const result = await response.json();
+                    return response.json();
+                })
+                .then(function(result) {
                     console.log('Validation result:', result);
-                    
                     if (result.isValid) {
                         showMessage('<strong>✓ Configuration is valid!</strong><br>You can now save this configuration.', false);
                     } else {
-                        let errorHtml = '<strong>Validation Errors:</strong><ul style="margin: 0.5em 0; padding-left: 1.5em;">';
+                        var errorHtml = '<strong>Validation Errors:</strong><ul style="margin: 0.5em 0; padding-left: 1.5em;">';
                         result.errors.forEach(function(error) {
                             errorHtml += '<li>' + error + '</li>';
                         });
                         errorHtml += '</ul>';
                         showMessage(errorHtml, true);
                     }
-                } catch (error) {
+                })
+                .catch(function(error) {
                     console.error('Validation error:', error);
                     showMessage('<strong>Error:</strong> ' + error.message, true);
-                }
+                });
             }
 
-            async function saveConfiguration() {
+            function saveConfiguration() {
                 console.log('Save button clicked');
                 hideMessage();
                 
+                var jsonContent = jsonEditor.value.trim();
+                
+                if (!jsonContent) {
+                    showMessage('Please enter a configuration to save', true);
+                    return;
+                }
+
                 try {
-                    const jsonContent = jsonEditor.value.trim();
-                    
-                    if (!jsonContent) {
-                        showMessage('Please enter a configuration to save', true);
-                        return;
-                    }
+                    JSON.parse(jsonContent);
+                } catch (e) {
+                    showMessage('<strong>JSON Syntax Error:</strong><br>' + e.message + '<br><br>Please fix the JSON syntax before saving.', true);
+                    return;
+                }
 
-                    // Test JSON parsing first
-                    try {
-                        JSON.parse(jsonContent);
-                    } catch (e) {
-                        showMessage('<strong>JSON Syntax Error:</strong><br>' + e.message + '<br><br>Please fix the JSON syntax before saving.', true);
-                        return;
-                    }
-
-                    console.log('Sending save request...');
-                    const response = await fetch('/api/timeline/save', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ jsonContent: jsonContent })
-                    });
-
+                console.log('Sending save request...');
+                fetch('/api/timeline/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ jsonContent: jsonContent })
+                })
+                .then(function(response) {
                     console.log('Save response status:', response.status);
-                    const result = await response.json();
+                    return response.json();
+                })
+                .then(function(result) {
                     console.log('Save result:', result);
-                    
                     if (result.success) {
                         showMessage('<strong>✓ Configuration saved successfully!</strong><br>Your timeline configuration has been saved.', false);
                     } else {
-                        let errorHtml = '<strong>Save Failed:</strong><br>' + result.message;
+                        var errorHtml = '<strong>Save Failed:</strong><br>' + result.message;
                         if (result.errors && result.errors.length > 0) {
                             errorHtml += '<ul style="margin: 0.5em 0; padding-left: 1.5em;">';
                             result.errors.forEach(function(error) {
@@ -262,10 +272,11 @@
                         }
                         showMessage(errorHtml, true);
                     }
-                } catch (error) {
+                })
+                .catch(function(error) {
                     console.error('Save error:', error);
                     showMessage('<strong>Error:</strong> ' + error.message, true);
-                }
+                });
             }
 
             function loadSample() {
@@ -275,46 +286,29 @@
             }
 
             // Event listeners
-            if (validateBtn) {
-                validateBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    validateConfiguration();
-                });
-                console.log('Validate button listener attached');
-            }
+            validateBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                validateConfiguration();
+            });
+            console.log('Validate button listener attached');
 
-            if (saveBtn) {
-                saveBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    saveConfiguration();
-                });
-                console.log('Save button listener attached');
-            }
+            saveBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                saveConfiguration();
+            });
+            console.log('Save button listener attached');
 
-            if (loadSampleBtn) {
-                loadSampleBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    loadSample();
-                });
-                console.log('Load sample button listener attached');
-            }
+            loadSampleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                loadSample();
+            });
+            console.log('Load sample button listener attached');
 
-            // Load configuration when page loads
-            if (page) {
-                page.addEventListener('pageshow', function() {
-                    console.log('Page shown, loading configuration');
-                    loadConfiguration();
-                });
-            }
-
-            // Also try loading immediately
-            if (document.readyState === 'complete' || document.readyState === 'interactive') {
-                console.log('Document ready, loading configuration immediately');
-                setTimeout(loadConfiguration, 100);
-            }
-
-            console.log('Timeline Config Page Script Loaded');
-        })();
+            // Load configuration on init
+            loadConfiguration();
+            
+            console.log('Timeline Config Page Initialized');
+        });
     </script>
 </body>
 </html>
