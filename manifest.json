@@ -10,11 +10,11 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
-        "version": "1.1.1.0",
-        "changelog": "## What's Changed in v1.1.1\n\n### 🔧 Bug Fixes\n- **Fixed Configuration Page Loading** — Resolved blank page issue when accessing plugin configuration\n- **Corrected Embedded Resource Path** — Fixed HTML configuration page not loading properly\n- **Improved Plugin Registration** — Enhanced web page registration for better Jellyfin integration\n\n### 🚀 User Experience Improvements\n- **Functional Web Interface** — Configuration page now loads correctly in all browsers\n- **Better Error Handling** — Improved feedback when configuration page fails to load\n- **Enhanced Stability** — More reliable plugin initialization and resource loading\n\n**This update fixes the blank configuration page issue reported by users. The drag-and-drop timeline interface should now work perfectly!**\n\n**Full Changelog**: https://github.com/ngdtam/jellyfin-timeline-plugin/compare/v1.1.0...v1.1.1",
+        "version": "1.1.2.0",
+        "changelog": "## v1.1.2 - Dependency Injection Fix\n\n### 🔧 Critical Bug Fix\n- **Fixed Plugin Installation Error** — Resolved dependency injection issues causing installation failures\n- **Simplified Service Architecture** — Removed complex DI registration that was incompatible with Jellyfin\n- **Direct Configuration Loading** — API now loads configuration files directly without custom services\n\n### 🚀 Improvements\n- **Stable Installation** — Plugin now installs without errors\n- **Working Configuration Page** — Web interface loads properly after installation\n- **Better Error Handling** — Improved error messages for troubleshooting\n\n**This fixes the installation error from v1.1.1. Plugin should now install and work correctly.**",
         "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.1/jellyfin-timeline-manager-v1.1.1.zip",
-        "checksum": "8121FEF8B8674063571C819457CA4182F3758C1FD018F02F8F1B7B30CB1A2CC5",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.2/jellyfin-timeline-manager-v1.1.2.zip",
+        "checksum": "3F6BF7D1DA46A9ABB91FA9A796C0C56C5A0B7A3CB52920B2607E4640ED4C210C",
         "timestamp": "2026-01-22T12:00:00Z"
       }
     ]

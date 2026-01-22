@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Jellyfin.Data.Enums;
 using Jellyfin.Plugin.TimelineManager.Extensions;
 using Jellyfin.Plugin.TimelineManager.Models;
-using Jellyfin.Plugin.TimelineManager.Services;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Entities.TV;
 using MediaBrowser.Controller.Library;
@@ -29,22 +28,18 @@ public class TimelineController : ControllerBase
 {
     private readonly ILogger<TimelineController> _logger;
     private readonly ILibraryManager _libraryManager;
-    private readonly ConfigurationService _configurationService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TimelineController"/> class.
     /// </summary>
     /// <param name="logger">The logger.</param>
     /// <param name="libraryManager">The library manager.</param>
-    /// <param name="configurationService">The configuration service.</param>
     public TimelineController(
         ILogger<TimelineController> logger,
-        ILibraryManager libraryManager,
-        ConfigurationService configurationService)
+        ILibraryManager libraryManager)
     {
         _logger = logger;
         _libraryManager = libraryManager;
-        _configurationService = configurationService;
     }
 
     /// <summary>
@@ -145,7 +140,7 @@ public class TimelineController : ControllerBase
         {
             _logger.LogDebug("Fetching current timeline configuration");
 
-            var config = await _configurationService.LoadConfigurationAsync();
+            var config = await LoadConfigurationAsync();
             if (config == null)
             {
                 // Return empty configuration
@@ -243,6 +238,40 @@ public class TimelineController : ControllerBase
         }
         catch
         {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Loads the timeline configuration from the JSON file.
+    /// </summary>
+    /// <returns>The loaded configuration or null if not found.</returns>
+    private async Task<TimelineConfiguration?> LoadConfigurationAsync()
+    {
+        try
+        {
+            var configPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "jellyfin", "config", "timeline_manager_config.json");
+            
+            if (!System.IO.File.Exists(configPath))
+            {
+                _logger.LogDebug("Configuration file not found at {Path}", configPath);
+                return null;
+            }
+
+            var jsonString = await System.IO.File.ReadAllTextAsync(configPath);
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+
+            var config = JsonSerializer.Deserialize<TimelineConfiguration>(jsonString, options);
+            _logger.LogDebug("Successfully loaded configuration with {Count} universes", config?.Universes?.Count ?? 0);
+            
+            return config;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load configuration: {Message}", ex.Message);
             return null;
         }
     }
