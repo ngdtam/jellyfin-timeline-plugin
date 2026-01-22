@@ -3,16 +3,16 @@
   "name": "Universal Timeline Manager",
   "description": "Creates and maintains chronological playlists for cinematic universes based on JSON configuration files.",
   "overview": "Automatically creates chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) with Provider_ID matching and mixed content support.",
-  "owner": "your-github-username",
+  "owner": "ngdtam",
   "category": "General",
-  "imageUrl": "https://raw.githubusercontent.com/your-username/jellyfin-plugin-timeline-manager/main/images/logo.png",
+  "imageUrl": "https://raw.githubusercontent.com/ngdtam/jellyfin-timeline-plugin/main/images/logo.png",
   "versions": [
     {
       "version": "1.0.0.0",
       "changelog": "Initial release with multiple universe support, Provider_ID matching, and comprehensive error handling",
       "targetAbi": "10.11.6.0",
-      "sourceUrl": "https://github.com/your-username/jellyfin-plugin-timeline-manager/releases/download/v1.0.0/Jellyfin.Plugin.TimelineManager.dll",
-      "checksum": "sha256-checksum-here",
+      "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.0.0/Jellyfin.Plugin.TimelineManager.dll",
+      "checksum": "76CF88B9C72AB0DACC8BBA5344639D27D7F76B92A483DE78BD6441CB008F38D2",
       "timestamp": "2025-01-22T00:00:00Z"
     }
   ]

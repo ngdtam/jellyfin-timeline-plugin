@@ -50,13 +50,13 @@ Jellyfin Playlists:                      ← Automatically created playlists
 1. **Dashboard → Plugins → Repositories → Add**
 2. Enter:
    - Name: `Universal Timeline Manager`
-   - URL: `https://raw.githubusercontent.com/your-username/jellyfin-plugin-timeline-manager/main/manifest.json`
+   - URL: `https://raw.githubusercontent.com/ngdtam/jellyfin-timeline-plugin/main/manifest.json`
 3. **Catalog → Universal Timeline Manager → Install**
 4. Restart Jellyfin
 
 ### Manual Installation
 
-Download from [Releases](https://github.com/your-username/jellyfin-plugin-timeline-manager/releases) and extract to:
+Download from [Releases](https://github.com/ngdtam/jellyfin-timeline-plugin/releases) and extract to:
 
 - Linux: `/var/lib/jellyfin/plugins/Universal Timeline Manager/`
 - Windows: `%ProgramData%\Jellyfin\Server\plugins\Universal Timeline Manager\`
