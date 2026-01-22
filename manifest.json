@@ -10,100 +10,12 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
-        "version": "1.3.0",
-        "changelog": "## v1.3.0 - API-Only Configuration\n\n### ✨ Major Change\n- **Removed Web UI** — Configuration now done via JSON file editing\n- **REST API** — Validate and manage configurations via HTTP endpoints\n- **Library Validation** — API checks if configured items exist in your Jellyfin library\n- **Comprehensive Documentation** — See CONFIGURATION.md for complete guide\n\n### API Endpoints\n- `GET /Timeline/Test` — Test API connection\n- `GET /Timeline/Config` — Get current configuration\n- `POST /Timeline/Validate` — Validate configuration and check library\n- `POST /Timeline/Save` — Save configuration\n\n**This version is more reliable and easier to use!**",
+        "version": "0.3.0",
+        "changelog": "## v0.3.0 - Beta Release\n\n**⚠️ BETA VERSION - Not Production Ready**\n\nThis is a beta release for testing purposes. Features may change.\n\n### ✨ Features\n- **REST API** — Validate and manage configurations via HTTP endpoints\n- **Library Validation** — API checks if configured items exist in your Jellyfin library\n- **JSON Configuration** — Simple file-based configuration\n- **Comprehensive Documentation** — See CONFIGURATION.md for complete guide\n\n### API Endpoints\n- `GET /Timeline/Test` — Test API connection\n- `GET /Timeline/Config` — Get current configuration\n- `POST /Timeline/Validate` — Validate configuration and check library\n- `POST /Timeline/Save` — Save configuration\n\n**Note:** This is API-only. No web UI. Configuration via JSON file editing.",
         "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.3.0/jellyfin-timeline-manager-v1.3.0.zip",
-        "checksum": "3CA5107DEE4C93D77C0787CF0E7AB001",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v0.3.0/jellyfin-timeline-manager-v0.3.0.zip",
+        "checksum": "3F864204988EF4DA76597064A79A6904",
         "timestamp": "2026-01-22T22:00:00Z"
-      },
-      {
-        "version": "1.2.7.1",
-        "changelog": "## v1.2.7.1 - Version Sync Fix\n\n### ✨ Fixed\n- **Version Display** — Now correctly shows 1.2.7.1 in Jellyfin (synced with GitHub releases)\n- **HTML Structure** — Simplified (no DOCTYPE/head/body)\n- **API Routes** — Using `/Timeline` with PascalCase (Config, Validate, Save)\n\n**Configuration page should work properly!**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.7.1/jellyfin-timeline-manager-v1.2.7.1.zip",
-        "checksum": "E70678B74A21962D2E762C71B56B9B0A",
-        "timestamp": "2026-01-22T21:45:00Z"
-      },
-      {
-        "version": "1.2.7.0",
-        "changelog": "## v1.2.7 - Fixed HTML Structure + API Routes\n\n### ✨ Fixed\n- **Simplified HTML Structure** — Removed DOCTYPE/head/body tags (Jellyfin embeds this)\n- **Fixed API Routes** — Changed from `/api/timeline` to `/Timeline` (Jellyfin convention)\n- **Proper Route Casing** — Using PascalCase for routes (Config, Validate, Save)\n\n**Configuration page should now work properly!**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.7/jellyfin-timeline-manager-v1.2.7.zip",
-        "checksum": "7E98694C9E5A56CCE2CD352FA2EE7550",
-        "timestamp": "2026-01-22T21:30:00Z"
-      },
-      {
-        "version": "1.2.6.0",
-        "changelog": "## v1.2.6 - Version Fix + Debug\n\n### ✨ Fixed\n- **Correct Version Display** — Now shows 1.2.6.0 instead of 1.0.0.0\n- **Enhanced Debugging** — Multiple console logs to diagnose script loading\n- **DOMContentLoaded Fallback** — Added fallback initialization method\n\n**Version should now display correctly in Jellyfin!**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.6/jellyfin-timeline-manager-v1.2.6.zip",
-        "checksum": "1B057D70968D82DFAAE5E413997C8329",
-        "timestamp": "2026-01-22T21:15:00Z"
-      },
-      {
-        "version": "1.2.5.0",
-        "changelog": "## v1.2.5 - Enhanced Debug\n\n### 🔧 Debug\n- **Immediate Console Log** — Script logs before any event listeners\n- **DOMContentLoaded Fallback** — Added fallback initialization\n- **Multiple Init Attempts** — Tries both pageshow and DOMContentLoaded\n\n**This will help us see if the script loads at all.**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.5/jellyfin-timeline-manager-v1.2.5.zip",
-        "checksum": "4DD54C1CBBFD6E0E83959F0278994DD7",
-        "timestamp": "2026-01-22T21:00:00Z"
-      },
-      {
-        "version": "1.2.4.0",
-        "changelog": "## v1.2.4 - Working JavaScript!\n\n### ✨ Fixed\n- **Proper Jellyfin Pattern** — Rewrote using working plugin as reference\n- **Uses ApiClient** — Jellyfin's built-in API client\n- **pageshow Event** — Correct initialization pattern\n- **Arrow Function IIFE** — Proper encapsulation\n\n**JavaScript should now execute properly!**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.4/jellyfin-timeline-manager-v1.2.4.zip",
-        "checksum": "388A45584E90DCA29795F318D625C0D8",
-        "timestamp": "2026-01-22T20:30:00Z"
-      },
-      {
-        "version": "1.2.3.0",
-        "changelog": "## v1.2.3 - Debug Version\n\n### 🔧 Debug\n- **Added Status Indicator** — Shows if JavaScript loaded\n- **Multiple Init Methods** — Tries DOMContentLoaded, load, and delayed init\n- **Enhanced Logging** — Better console messages with [Timeline] prefix\n\n**This version helps diagnose why scripts aren't running.**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.3/jellyfin-timeline-manager-v1.2.3.zip",
-        "checksum": "29445BCFA4A577753281E7C623569161",
-        "timestamp": "2026-01-22T20:15:00Z"
-      },
-      {
-        "version": "1.2.2.0",
-        "changelog": "## v1.2.2 - JavaScript Compatibility Fix\n\n### 🔧 Fixes\n- **Fixed JavaScript Execution** — Rewrote script to use ES5 syntax for better compatibility\n- **Fixed Page Load Event** — Now uses window.load instead of pageshow\n- **Removed async/await** — Using promises for broader browser support\n\n**Buttons should now work properly!**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.2/jellyfin-timeline-manager-v1.2.2.zip",
-        "checksum": "9D6651E344F2663E702F62E8ACAE6F5B",
-        "timestamp": "2026-01-22T20:00:00Z"
-      },
-      {
-        "version": "1.2.1.0",
-        "changelog": "## v1.2.1 - UI Fixes\n\n### 🔧 Fixes\n- **Fixed Load Sample Button** — Now properly loads sample configuration\n- **Fixed Validate/Save Buttons** — Messages now display correctly\n- **Fixed Textarea Cursor** — Proper padding and styling for text input\n- **Added Console Logging** — Better debugging for API calls\n\n**All UI interactions now working properly!**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.1/jellyfin-timeline-manager-v1.2.1.zip",
-        "checksum": "6DE78AFC471F2FD1178BD5361BF83F78",
-        "timestamp": "2026-01-22T19:30:00Z"
-      },
-      {
-        "version": "1.2.0.0",
-        "changelog": "## v1.2.0 - Configuration Editor\n\n### ✨ New Features\n- **Web-Based Configuration Editor** — Edit timeline config directly in Jellyfin UI\n- **JSON Validation** — Real-time validation before saving\n- **Sample Configuration** — Load sample config with one click\n\n**No more manual JSON file editing required!**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.0/jellyfin-timeline-manager-v1.2.0.zip",
-        "checksum": "C47913402568D97B12395886EF4639C9",
-        "timestamp": "2026-01-22T19:00:00Z"
-      },
-      {
-        "version": "1.1.9.0",
-        "changelog": "## v1.1.9 - Jellyfin UI Compliance\n\n### 🔧 Fix\n- **Proper Jellyfin HTML Structure** — Updated config page with data-role, emby-button components\n- **Jellyfin Styling** — Now uses native Jellyfin UI classes and structure\n\n**Configuration page now displays correctly with Jellyfin styling.**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.9/jellyfin-timeline-manager-v1.1.9.zip",
-        "checksum": "4E0245333134E44D599140824BE35BDA",
-        "timestamp": "2026-01-22T18:30:00Z"
-      },
-      {
-        "version": "1.1.8.0",
-        "changelog": "## v1.1.8 - Configuration Page Working\n\n### 🔧 Fix\n- **Fixed Configuration Page Display** — Updated GetPages() method to properly serve embedded HTML\n- **Dynamic Resource Path** — Now uses GetType().Namespace for correct resource resolution\n\n**This fixes the black/blank configuration page issue.**",
-        "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.8/jellyfin-timeline-manager-v1.1.8.zip",
-        "checksum": "D33AE8999549738F45E52A27048E5E65",
-        "timestamp": "2026-01-22T18:00:00Z"
       }
     ]
   }
