@@ -10,6 +10,14 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
+        "version": "1.2.1.0",
+        "changelog": "## v1.2.1 - UI Fixes\n\n### 🔧 Fixes\n- **Fixed Load Sample Button** — Now properly loads sample configuration\n- **Fixed Validate/Save Buttons** — Messages now display correctly\n- **Fixed Textarea Cursor** — Proper padding and styling for text input\n- **Added Console Logging** — Better debugging for API calls\n\n**All UI interactions now working properly!**",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.1/jellyfin-timeline-manager-v1.2.1.zip",
+        "checksum": "6DE78AFC471F2FD1178BD5361BF83F78",
+        "timestamp": "2026-01-22T19:30:00Z"
+      },
+      {
         "version": "1.2.0.0",
         "changelog": "## v1.2.0 - Configuration Editor\n\n### ✨ New Features\n- **Web-Based Configuration Editor** — Edit timeline config directly in Jellyfin UI\n- **JSON Validation** — Real-time validation before saving\n- **Sample Configuration** — Load sample config with one click\n\n**No more manual JSON file editing required!**",
         "targetAbi": "10.10.0.0",

@@ -3,6 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <title>Universal Timeline Manager</title>
+    <style>
+        #jsonEditor {
+            font-family: 'Courier New', monospace !important;
+            font-size: 0.9em !important;
+            width: 100% !important;
+            min-height: 400px !important;
+            padding: 10px !important;
+            box-sizing: border-box !important;
+        }
+    </style>
 </head>
 <body>
     <div id="timelineConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-textarea">
@@ -21,10 +31,8 @@
                             <label class="inputLabel" for="jsonEditor">JSON Configuration:</label>
                             <textarea 
                                 id="jsonEditor" 
-                                is="emby-textarea" 
                                 class="emby-textarea"
-                                rows="20"
-                                style="font-family: 'Courier New', monospace; font-size: 0.9em; width: 100%;">
+                                rows="20">
                             </textarea>
                             <div class="fieldDescription">
                                 Edit the JSON configuration above. Use Provider IDs (TMDB/IMDB) to identify your content.
@@ -34,13 +42,13 @@
                         <div id="messageContainer" style="margin-top: 1em; display: none;"></div>
 
                         <div class="verticalSection" style="margin-top: 1.5em;">
-                            <button is="emby-button" type="button" class="raised button-submit" id="validateBtn">
+                            <button type="button" class="raised button-submit emby-button" id="validateBtn">
                                 <span>Validate Configuration</span>
                             </button>
-                            <button is="emby-button" type="button" class="raised button-submit" id="saveBtn" style="margin-left: 0.5em;">
+                            <button type="button" class="raised button-submit emby-button" id="saveBtn" style="margin-left: 0.5em;">
                                 <span>Save Configuration</span>
                             </button>
-                            <button is="emby-button" type="button" class="raised" id="loadSampleBtn" style="margin-left: 0.5em;">
+                            <button type="button" class="raised emby-button" id="loadSampleBtn" style="margin-left: 0.5em;">
                                 <span>Load Sample</span>
                             </button>
                         </div>
@@ -75,12 +83,23 @@
 
     <script type="text/javascript">
         (function() {
+            console.log('Timeline Config Page Script Loading...');
+            
             const page = document.querySelector('#timelineConfigPage');
             const jsonEditor = document.querySelector('#jsonEditor');
             const validateBtn = document.querySelector('#validateBtn');
             const saveBtn = document.querySelector('#saveBtn');
             const loadSampleBtn = document.querySelector('#loadSampleBtn');
             const messageContainer = document.querySelector('#messageContainer');
+
+            console.log('Elements found:', {
+                page: !!page,
+                jsonEditor: !!jsonEditor,
+                validateBtn: !!validateBtn,
+                saveBtn: !!saveBtn,
+                loadSampleBtn: !!loadSampleBtn,
+                messageContainer: !!messageContainer
+            });
 
             const sampleConfig = {
                 "universes": [
@@ -103,7 +122,8 @@
                 ]
             };
 
-            function showMessage(message, isError = false) {
+            function showMessage(message, isError) {
+                console.log('Showing message:', message, 'isError:', isError);
                 messageContainer.style.display = 'block';
                 messageContainer.style.padding = '1em';
                 messageContainer.style.borderRadius = '4px';
@@ -127,9 +147,12 @@
             }
 
             async function loadConfiguration() {
+                console.log('Loading configuration...');
                 try {
                     const response = await fetch('/api/timeline/config');
+                    console.log('Config response status:', response.status);
                     const config = await response.json();
+                    console.log('Config loaded:', config);
                     
                     if (config && config.universes && config.universes.length > 0) {
                         jsonEditor.value = JSON.stringify(config, null, 2);
@@ -143,10 +166,12 @@
             }
 
             async function validateConfiguration() {
+                console.log('Validate button clicked');
                 hideMessage();
                 
                 try {
                     const jsonContent = jsonEditor.value.trim();
+                    console.log('JSON content length:', jsonContent.length);
                     
                     if (!jsonContent) {
                         showMessage('Please enter a configuration to validate', true);
@@ -157,10 +182,12 @@
                     try {
                         JSON.parse(jsonContent);
                     } catch (e) {
-                        showMessage(`<strong>JSON Syntax Error:</strong><br>${e.message}`, true);
+                        console.error('JSON parse error:', e);
+                        showMessage('<strong>JSON Syntax Error:</strong><br>' + e.message, true);
                         return;
                     }
 
+                    console.log('Sending validation request...');
                     const response = await fetch('/api/timeline/validate', {
                         method: 'POST',
                         headers: {
@@ -169,24 +196,28 @@
                         body: JSON.stringify({ jsonContent: jsonContent })
                     });
 
+                    console.log('Validation response status:', response.status);
                     const result = await response.json();
+                    console.log('Validation result:', result);
                     
                     if (result.isValid) {
                         showMessage('<strong>✓ Configuration is valid!</strong><br>You can now save this configuration.', false);
                     } else {
                         let errorHtml = '<strong>Validation Errors:</strong><ul style="margin: 0.5em 0; padding-left: 1.5em;">';
-                        result.errors.forEach(error => {
-                            errorHtml += `<li>${error}</li>`;
+                        result.errors.forEach(function(error) {
+                            errorHtml += '<li>' + error + '</li>';
                         });
                         errorHtml += '</ul>';
                         showMessage(errorHtml, true);
                     }
                 } catch (error) {
-                    showMessage(`<strong>Error:</strong> ${error.message}`, true);
+                    console.error('Validation error:', error);
+                    showMessage('<strong>Error:</strong> ' + error.message, true);
                 }
             }
 
             async function saveConfiguration() {
+                console.log('Save button clicked');
                 hideMessage();
                 
                 try {
@@ -201,10 +232,11 @@
                     try {
                         JSON.parse(jsonContent);
                     } catch (e) {
-                        showMessage(`<strong>JSON Syntax Error:</strong><br>${e.message}<br><br>Please fix the JSON syntax before saving.`, true);
+                        showMessage('<strong>JSON Syntax Error:</strong><br>' + e.message + '<br><br>Please fix the JSON syntax before saving.', true);
                         return;
                     }
 
+                    console.log('Sending save request...');
                     const response = await fetch('/api/timeline/save', {
                         method: 'POST',
                         headers: {
@@ -213,40 +245,75 @@
                         body: JSON.stringify({ jsonContent: jsonContent })
                     });
 
+                    console.log('Save response status:', response.status);
                     const result = await response.json();
+                    console.log('Save result:', result);
                     
                     if (result.success) {
                         showMessage('<strong>✓ Configuration saved successfully!</strong><br>Your timeline configuration has been saved.', false);
                     } else {
-                        let errorHtml = `<strong>Save Failed:</strong><br>${result.message}`;
+                        let errorHtml = '<strong>Save Failed:</strong><br>' + result.message;
                         if (result.errors && result.errors.length > 0) {
                             errorHtml += '<ul style="margin: 0.5em 0; padding-left: 1.5em;">';
-                            result.errors.forEach(error => {
-                                errorHtml += `<li>${error}</li>`;
+                            result.errors.forEach(function(error) {
+                                errorHtml += '<li>' + error + '</li>';
                             });
                             errorHtml += '</ul>';
                         }
                         showMessage(errorHtml, true);
                     }
                 } catch (error) {
-                    showMessage(`<strong>Error:</strong> ${error.message}`, true);
+                    console.error('Save error:', error);
+                    showMessage('<strong>Error:</strong> ' + error.message, true);
                 }
             }
 
             function loadSample() {
+                console.log('Load sample button clicked');
                 jsonEditor.value = JSON.stringify(sampleConfig, null, 2);
                 showMessage('Sample configuration loaded. Edit as needed and click Validate.', false);
             }
 
             // Event listeners
-            validateBtn.addEventListener('click', validateConfiguration);
-            saveBtn.addEventListener('click', saveConfiguration);
-            loadSampleBtn.addEventListener('click', loadSample);
+            if (validateBtn) {
+                validateBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    validateConfiguration();
+                });
+                console.log('Validate button listener attached');
+            }
+
+            if (saveBtn) {
+                saveBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    saveConfiguration();
+                });
+                console.log('Save button listener attached');
+            }
+
+            if (loadSampleBtn) {
+                loadSampleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loadSample();
+                });
+                console.log('Load sample button listener attached');
+            }
 
             // Load configuration when page loads
-            page.addEventListener('pageshow', function() {
-                loadConfiguration();
-            });
+            if (page) {
+                page.addEventListener('pageshow', function() {
+                    console.log('Page shown, loading configuration');
+                    loadConfiguration();
+                });
+            }
+
+            // Also try loading immediately
+            if (document.readyState === 'complete' || document.readyState === 'interactive') {
+                console.log('Document ready, loading configuration immediately');
+                setTimeout(loadConfiguration, 100);
+            }
+
+            console.log('Timeline Config Page Script Loaded');
         })();
     </script>
 </body>
