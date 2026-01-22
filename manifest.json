@@ -10,11 +10,11 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
-        "version": "1.1.5.0",
-        "changelog": "## v1.1.5 - Lambda Error Fix\n\n### 🔧 Critical Fix\n- **Removed Scheduled Task** — Eliminated TimelineConfigTask causing lambda method errors\n- **Removed MVC Dependencies** — Cleaned up unnecessary ASP.NET Core references\n- **Minimal Plugin** — Now contains only essential components for configuration page\n\n**This completely eliminates the lambda method error during installation.**",
+        "version": "1.1.6.0",
+        "changelog": "## v1.1.6 - Checksum Algorithm Fix\n\n### 🔧 Critical Fix\n- **Fixed Checksum Algorithm** — Now using MD5 instead of SHA256 (Jellyfin requirement)\n- **Verified Installation** — Checksums now match what Jellyfin expects\n\n**This fixes the persistent checksum mismatch errors.**",
         "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.5/jellyfin-timeline-manager-v1.1.5.zip",
-        "checksum": "F57BDE3368EA7416500153EC829970450863EE23C017A490043E11AB5611BDE1",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.6/jellyfin-timeline-manager-v1.1.6.zip",
+        "checksum": "9AD7AB09EB5130FCF705FC10E46B3E5A",
         "timestamp": "2026-01-22T18:00:00Z"
       }
     ]
