@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>Universal Timeline Manager</title>
-</head>
-<body>
-    <div id="timelineConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-textarea">
+<div id="timelineConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-textarea">
         <div data-role="content">
             <div class="content-primary">
                 <form id="timelineConfigForm">
@@ -127,7 +120,7 @@
             function loadConfiguration() {
                 console.log('[Timeline] Loading configuration');
                 window.ApiClient.ajax({
-                    url: window.ApiClient.getUrl('timeline/config'),
+                    url: window.ApiClient.getUrl('Timeline/Config'),
                     type: 'GET',
                     dataType: 'json'
                 }).then(function(config) {
@@ -166,7 +159,7 @@
 
                 console.log('[Timeline] Sending validation request');
                 window.ApiClient.ajax({
-                    url: window.ApiClient.getUrl('timeline/validate'),
+                    url: window.ApiClient.getUrl('Timeline/Validate'),
                     type: 'POST',
                     data: JSON.stringify({ jsonContent: jsonContent }),
                     contentType: 'application/json',
@@ -210,7 +203,7 @@
 
                 console.log('[Timeline] Sending save request');
                 window.ApiClient.ajax({
-                    url: window.ApiClient.getUrl('timeline/save'),
+                    url: window.ApiClient.getUrl('Timeline/Save'),
                     type: 'POST',
                     data: JSON.stringify({ jsonContent: jsonContent }),
                     contentType: 'application/json',
@@ -291,5 +284,4 @@
             });
         })();
     </script>
-</body>
-</html>
+</div>

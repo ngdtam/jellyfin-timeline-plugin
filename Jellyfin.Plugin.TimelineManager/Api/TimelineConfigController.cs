@@ -15,7 +15,7 @@ namespace Jellyfin.Plugin.TimelineManager.Api;
 /// API controller for timeline configuration management.
 /// </summary>
 [ApiController]
-[Route("api/timeline")]
+[Route("Timeline")]
 [Authorize(Policy = "RequiresElevation")]
 public class TimelineConfigController : ControllerBase
 {
@@ -41,7 +41,7 @@ public class TimelineConfigController : ControllerBase
     /// Gets the current timeline configuration.
     /// </summary>
     /// <returns>The configuration JSON or empty object if not found.</returns>
-    [HttpGet("config")]
+    [HttpGet("Config")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<object>> GetConfiguration()
     {
@@ -70,7 +70,7 @@ public class TimelineConfigController : ControllerBase
     /// </summary>
     /// <param name="request">The configuration validation request.</param>
     /// <returns>Validation result.</returns>
-    [HttpPost("validate")]
+    [HttpPost("Validate")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<ValidationResponse> ValidateConfiguration([FromBody] ConfigRequest request)
     {
@@ -136,7 +136,7 @@ public class TimelineConfigController : ControllerBase
     /// </summary>
     /// <param name="request">The configuration save request.</param>
     /// <returns>Save result.</returns>
-    [HttpPost("save")]
+    [HttpPost("Save")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<SaveResponse>> SaveConfiguration([FromBody] ConfigRequest request)
     {
