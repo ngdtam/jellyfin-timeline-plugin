@@ -29,6 +29,9 @@
                         
                         <div class="inputContainer">
                             <label class="inputLabel" for="jsonEditor">JSON Configuration:</label>
+                            <div id="scriptStatus" style="padding: 0.5em; background: rgba(255,165,0,0.1); border-left: 4px solid orange; margin-bottom: 1em;">
+                                ⚠️ JavaScript not loaded yet...
+                            </div>
                             <textarea 
                                 id="jsonEditor" 
                                 class="emby-textarea"
@@ -82,12 +85,22 @@
     </div>
 
     <script type="text/javascript">
-        window.PluginConfig = {
-            pluginId: "12345678-1234-5678-9abc-123456789012"
-        };
-
-        window.addEventListener('load', function() {
-            console.log('Window loaded, initializing Timeline Config...');
+        // Try multiple initialization methods
+        console.log('[Timeline] Script tag executed');
+        
+        function initTimelineConfig() {
+            console.log('[Timeline] initTimelineConfig called');
+            
+            // Update status indicator
+            var scriptStatus = document.querySelector('#scriptStatus');
+            if (scriptStatus) {
+                scriptStatus.innerHTML = '✓ JavaScript loaded successfully!';
+                scriptStatus.style.background = 'rgba(0,255,0,0.1)';
+                scriptStatus.style.borderLeft = '4px solid green';
+                console.log('[Timeline] Status indicator updated');
+            } else {
+                console.log('[Timeline] Status indicator not found');
+            }
             
             var page = document.querySelector('#timelineConfigPage');
             var jsonEditor = document.querySelector('#jsonEditor');
@@ -307,8 +320,28 @@
             // Load configuration on init
             loadConfiguration();
             
-            console.log('Timeline Config Page Initialized');
+            console.log('[Timeline] Timeline Config Page Initialized');
+        }
+        
+        // Try all possible initialization methods
+        if (document.readyState === 'loading') {
+            console.log('[Timeline] Document still loading, adding DOMContentLoaded listener');
+            document.addEventListener('DOMContentLoaded', initTimelineConfig);
+        } else {
+            console.log('[Timeline] Document already loaded, initializing immediately');
+            initTimelineConfig();
+        }
+        
+        window.addEventListener('load', function() {
+            console.log('[Timeline] Window load event fired');
+            initTimelineConfig();
         });
+        
+        // Also try a delayed init
+        setTimeout(function() {
+            console.log('[Timeline] Delayed init attempt');
+            initTimelineConfig();
+        }, 500);
     </script>
 </body>
 </html>
