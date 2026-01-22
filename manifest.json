@@ -10,11 +10,11 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
-        "version": "1.1.6.0",
-        "changelog": "## v1.1.6 - Checksum Algorithm Fix\n\n### 🔧 Critical Fix\n- **Fixed Checksum Algorithm** — Now using MD5 instead of SHA256 (Jellyfin requirement)\n- **Verified Installation** — Checksums now match what Jellyfin expects\n\n**This fixes the persistent checksum mismatch errors.**",
+        "version": "1.1.7.0",
+        "changelog": "## v1.1.7 - Configuration Page Fix\n\n### 🔧 Fix\n- **Fixed Empty Configuration Page** — HTML file now properly embedded in DLL\n- **Verified Embedded Resources** — Configuration page will now display correctly\n\n**This fixes the blank configuration page issue.**",
         "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.6/jellyfin-timeline-manager-v1.1.6.zip",
-        "checksum": "9AD7AB09EB5130FCF705FC10E46B3E5A",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.7/jellyfin-timeline-manager-v1.1.7.zip",
+        "checksum": "A9ABC195A6FDD6F2B5ED894ABD546F65",
         "timestamp": "2026-01-22T18:00:00Z"
       }
     ]
