@@ -2,8 +2,8 @@
   {
     "guid": "12345678-1234-5678-9abc-123456789012",
     "name": "Universal Timeline Manager",
-    "overview": "Chronological playlists for cinematic universes in Jellyfin with drag-and-drop web interface.",
-    "description": "Automatically creates and maintains chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) based on JSON configuration files or visual web interface. Features drag-and-drop timeline creation, Provider_ID matching with TMDB/IMDB, mixed content support (movies + TV episodes), and comprehensive error handling. No more manual JSON editing - use the intuitive web UI directly in Jellyfin!",
+    "overview": "Chronological playlists for cinematic universes in Jellyfin via JSON configuration.",
+    "description": "Creates chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) based on JSON configuration files. Features Provider_ID matching with TMDB/IMDB for accurate content identification, mixed content support (movies + TV episodes), and comprehensive error handling. Simple JSON-based configuration with clear documentation and examples provided in the plugin configuration page.",
     "owner": "ngdtam",
     "category": "General",
     "imageUrl": "https://raw.githubusercontent.com/ngdtam/jellyfin-timeline-plugin/main/images/logo.png",
