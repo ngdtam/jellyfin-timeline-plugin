@@ -27,6 +27,8 @@ Jellyfin Playlists:                      ← Automatically created playlists
 
 ## Features
 
+- **REST API** — Validate and manage configurations via HTTP endpoints (v1.3.0)
+- **Library Validation** — API checks if configured items exist in your Jellyfin library
 - **Multiple Universe Support** — Configure unlimited cinematic universes in a single JSON file
 - **Mixed Content Types** — Movies and TV episodes together in the same chronological playlist
 - **Provider_ID Matching** — Uses TMDB and IMDB identifiers for 100% accurate content matching
@@ -34,26 +36,24 @@ Jellyfin Playlists:                      ← Automatically created playlists
 - **Error Resilience** — Gracefully handles missing items and service failures without stopping
 - **Performance Optimized** — O(1) lookup performance using dictionary structures for large libraries
 - **Comprehensive Logging** — Detailed logging with troubleshooting guidance and progress tracking
-- **Idempotent Operations** — Safe to run multiple times, updates existing playlists without duplicates
-- **REST API** — Validate and manage configurations via HTTP endpoints
 
 ## Configuration
 
-**Configuration is done via JSON file editing.** The plugin provides REST API endpoints for validation and management.
+**v1.3.0 is API-only.** Configuration is done via JSON file editing or REST API endpoints.
 
-📖 **See [CONFIGURATION.md](CONFIGURATION.md) for:**
+📖 **See [CONFIGURATION.md](../CONFIGURATION.md) for:**
 - Complete configuration guide
 - How to find Provider IDs
 - API endpoint documentation
 - Validation examples
+- Docker instructions
 - Troubleshooting tips
 
 ## Requirements
 
-- Jellyfin Server **10.11.6** or higher
+- Jellyfin Server **10.10.0** or higher
 - **.NET 9.0** runtime
-- Read access to configuration directory
-- Playlist creation permissions
+- Read/write access to configuration directory (`/config`)
 
 ## Installation
 
@@ -62,13 +62,13 @@ Jellyfin Playlists:                      ← Automatically created playlists
 1. **Dashboard → Plugins → Repositories → Add**
 2. Enter:
    - Name: `Universal Timeline Manager`
-   - URL: `https://raw.githubusercontent.com/your-username/jellyfin-plugin-timeline-manager/main/manifest.json`
+   - URL: `https://raw.githubusercontent.com/ngdtam/jellyfin-timeline-plugin/main/manifest.json`
 3. **Catalog → Universal Timeline Manager → Install**
 4. Restart Jellyfin
 
 ### Manual Installation
 
-Download from [Releases](https://github.com/your-username/jellyfin-plugin-timeline-manager/releases) and extract to:
+Download from [Releases](https://github.com/ngdtam/jellyfin-timeline-plugin/releases) and extract to:
 
 - Linux: `/var/lib/jellyfin/plugins/Universal Timeline Manager/`
 - Windows: `%ProgramData%\Jellyfin\Server\plugins\Universal Timeline Manager\`
@@ -104,11 +104,11 @@ Create `/config/timeline_manager_config.json` in your Jellyfin config directory:
 }
 ```
 
-**📖 See [CONFIGURATION.md](CONFIGURATION.md) for detailed configuration guide, examples, and API documentation.**
+**📖 See [CONFIGURATION.md](../CONFIGURATION.md) for detailed configuration guide, examples, and API documentation.**
 
 ### 2. Validate Configuration (Optional)
 
-Use the REST API to validate your configuration before running:
+Use the REST API to validate your configuration:
 
 ```bash
 # Test API connection
@@ -122,18 +122,14 @@ curl -X POST http://localhost:8096/Timeline/Validate \
 
 The validation endpoint will tell you exactly which items are found or missing in your Jellyfin library.
 
-### 3. Run Timeline Task
+### 3. Access Your Configuration
 
-1. Go to **Dashboard → Scheduled Tasks**
-2. Find **"Universal Timeline Manager"**
-3. Click **Run Now** or set up a schedule
-4. Monitor progress in Jellyfin logs
+The plugin is now installed and ready. You can:
+- Edit the configuration file directly at `/config/timeline_manager_config.json`
+- Use the REST API endpoints to validate and save configurations
+- Monitor the plugin through Jellyfin logs
 
-### 3. View Your Playlists
-
-Playlists appear in your Jellyfin library:
-- **Marvel Cinematic Universe** — All MCU content in chronological order
-- **Star Wars Saga** — All Star Wars content in timeline order
+**Note:** v1.3.0 is API-only. There is no web UI configuration page.
 
 ## Configuration Reference
 
@@ -227,6 +223,60 @@ services:
     # Plugin will read from /config/timeline_manager_config.json
 ```
 
+**Docker Users:** Edit configuration using:
+```bash
+# Method 1: Copy out, edit, copy back
+docker cp jellyfin-container:/config/timeline_manager_config.json ./config.json
+# Edit locally
+docker cp ./config.json jellyfin-container:/config/timeline_manager_config.json
+
+# Method 2: Edit directly in container
+docker exec -it jellyfin-container vi /config/timeline_manager_config.json
+
+# Method 3: Use volume mount (edit directly on host)
+nano /path/to/jellyfin/config/timeline_manager_config.json
+```
+
+## REST API Reference
+
+v1.3.0 provides REST API endpoints for configuration management:
+
+### Test API Connection
+```bash
+GET http://localhost:8096/Timeline/Test
+```
+Returns API status and timestamp.
+
+### Get Current Configuration
+```bash
+GET http://localhost:8096/Timeline/Config
+```
+Returns the current configuration JSON.
+
+### Validate Configuration
+```bash
+POST http://localhost:8096/Timeline/Validate
+Content-Type: application/json
+
+{
+  "jsonContent": "{\"universes\":[...]}"
+}
+```
+Validates JSON structure and checks if items exist in your Jellyfin library.
+
+### Save Configuration
+```bash
+POST http://localhost:8096/Timeline/Save
+Content-Type: application/json
+
+{
+  "jsonContent": "{\"universes\":[...]}"
+}
+```
+Validates and saves the configuration.
+
+**📖 See [CONFIGURATION.md](../CONFIGURATION.md) for complete API documentation.**
+
 ## Troubleshooting
 
 ### Common Issues
@@ -242,14 +292,15 @@ services:
 - Ensure file is at `/config/timeline_manager_config.json`
 
 **Items not found in playlists?**
+- Use the `/Timeline/Validate` API endpoint to check which items are missing
 - Verify Provider_IDs match your library metadata
 - Check that content exists in your Jellyfin library
-- Review logs for specific missing item warnings
+- Ensure metadata has been refreshed in Jellyfin
 
 **Playlists not created?**
-- Ensure user has playlist creation permissions
-- Check Jellyfin logs for detailed error messages
-- Verify Jellyfin services are running properly
+- Note: v1.3.0 focuses on configuration management via API
+- Playlist creation feature is planned for future releases
+- Currently, the plugin validates and manages configuration only
 
 ### Log Analysis
 
@@ -266,46 +317,44 @@ Enable debug logging in Jellyfin for detailed troubleshooting:
 
 ### Performance Monitoring
 
-The plugin includes comprehensive performance monitoring:
-- Processing time per universe
-- Item lookup performance metrics
-- Memory usage tracking
-- Error rate statistics
+The plugin includes performance monitoring for API operations:
+- Configuration validation time
+- Library lookup performance
+- API response times
 
 ## How It Works
+
+### Configuration Management (v1.3.0)
+1. **JSON Configuration** — Edit `/config/timeline_manager_config.json` directly
+2. **REST API** — Validate and save configurations via HTTP endpoints
+3. **Library Validation** — API checks if configured Provider IDs exist in your library
 
 ### Content Discovery
 1. **Library Indexing** — Scans your Jellyfin library and builds O(1) lookup dictionaries
 2. **Provider Matching** — Matches configuration Provider_IDs to library content
 3. **Mixed Content Support** — Handles movies and TV episodes uniformly
 
-### Playlist Management
-1. **Chronological Ordering** — Maintains exact order from configuration
-2. **Idempotent Updates** — Safely updates existing playlists without duplicates
-3. **Error Resilience** — Continues processing other universes if one fails
-
-### Automatic Synchronization
-- **Scheduled Task** — Run manually or on a schedule
+### Future Features (Planned)
+- **Automatic Playlist Creation** — Generate playlists from validated configurations
+- **Scheduled Tasks** — Automatic synchronization on a schedule
 - **Progress Reporting** — Real-time progress updates in Jellyfin
-- **Comprehensive Logging** — Detailed logs for troubleshooting
 
 ## Contributing
 
 Interested in contributing? We welcome:
-- **Bug reports** and feature requests
+- **Bug reports** and feature requests via [GitHub Issues](https://github.com/ngdtam/jellyfin-timeline-plugin/issues)
 - **Configuration examples** for popular universes
-- **Code contributions** and improvements
+- **Code contributions** and improvements via Pull Requests
 - **Documentation** updates and translations
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## Community Configurations
 
-Check out community-contributed configurations:
-- [Marvel Cinematic Universe (Complete)](configurations/mcu-complete.json)
-- [DC Extended Universe](configurations/dceu.json)
-- [Star Wars (All Media)](configurations/star-wars-complete.json)
-- [Harry Potter Universe](configurations/harry-potter.json)
+Check out community-contributed configurations in the `configurations/` directory:
+- [Marvel Cinematic Universe (Complete)](../configurations/mcu-complete.json)
+- [DC Extended Universe](../configurations/dceu.json)
+- [Star Wars (All Media)](../configurations/star-wars-complete.json)
+
+Want to contribute your own? Submit a PR with your configuration!
 
 ## License
 
