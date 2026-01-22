@@ -1,0 +1,19 @@
+{
+  "universes": [
+    {
+      "key": "dceu",
+      "name": "DC Extended Universe",
+      "items": [
+        {"providerId": "49026", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "297761", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "141052", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "297762", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "141053", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "438631", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "297802", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "526896", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "594767", "providerName": "tmdb", "type": "movie"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "universes": [
+    {
+      "key": "mcu-complete",
+      "name": "Marvel Cinematic Universe (Complete Timeline)",
+      "items": [
+        {"providerId": "1771", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "1726", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "10138", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "1724", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "99861", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "24428", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "68721", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "76338", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "102382", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "118340", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "283995", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "284052", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "284053", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "299536", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "299537", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "363088", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "429617", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "181808", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "315635", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "284054", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "320288", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "447365", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "299534", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "424694", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "338952", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "497698", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "524434", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "634649", "providerName": "tmdb", "type": "movie"}
+      ]
+    }
+  ]
+}

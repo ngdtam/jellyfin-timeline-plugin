@@ -1,0 +1,19 @@
+{
+  "guid": "12345678-1234-5678-9abc-123456789012",
+  "name": "Universal Timeline Manager",
+  "description": "Auto-generate chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) based on JSON configuration files. Supports mixed content types and Provider_ID matching for accurate content identification.",
+  "overview": "Creates and maintains chronological playlists for cinematic universes with support for movies and TV episodes, using TMDB/IMDB Provider_IDs for accurate content matching.",
+  "owner": "Kiro",
+  "category": "Media Management",
+  "imageUrl": "",
+  "versions": [
+    {
+      "version": "1.0.0.0",
+      "changelog": "Initial release with support for multiple universes, mixed content types, Provider_ID matching, and comprehensive error handling.",
+      "targetAbi": "10.11.6.0",
+      "sourceUrl": "",
+      "checksum": "",
+      "timestamp": "2025-01-21T00:00:00Z"
+    }
+  ]
+}
