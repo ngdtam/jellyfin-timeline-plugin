@@ -1,4 +1,10 @@
-<div id="timelineConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-textarea">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Universal Timeline Manager</title>
+</head>
+<body>
+<div id="timelineManagerConfigurationPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button,emby-textarea">
         <div data-role="content">
             <div class="content-primary">
                 <form id="timelineConfigForm">
@@ -235,7 +241,7 @@
                 showMessage('Sample configuration loaded. Edit as needed and click Validate.', false);
             }
 
-            document.querySelector('#timelineConfigPage').addEventListener('pageshow', function() {
+            document.querySelector('#timelineManagerConfigurationPage').addEventListener('pageshow', function() {
                 console.log('[Timeline] Page shown, initializing');
                 
                 loadConfiguration();
@@ -261,7 +267,7 @@
             // Fallback: also try DOMContentLoaded
             document.addEventListener('DOMContentLoaded', function() {
                 console.log('[Timeline] DOMContentLoaded fired');
-                var page = document.querySelector('#timelineConfigPage');
+                var page = document.querySelector('#timelineManagerConfigurationPage');
                 if (page) {
                     console.log('[Timeline] Page element found, setting up listeners');
                     loadConfiguration();
@@ -285,3 +291,5 @@
         })();
     </script>
 </div>
+</body>
+</html>

@@ -22,6 +22,11 @@
             </summary>
             <returns>The configuration JSON or empty object if not found.</returns>
         </member>
+        <member name="M:Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController.TestEndpoint">
+            <summary>
+            Diagnostic endpoint to test if API is working.
+            </summary>
+        </member>
         <member name="M:Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController.ValidateConfiguration(Jellyfin.Plugin.TimelineManager.Api.ConfigRequest)">
             <summary>
             Validates the provided timeline configuration.

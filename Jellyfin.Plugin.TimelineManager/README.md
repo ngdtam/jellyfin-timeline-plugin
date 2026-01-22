@@ -35,6 +35,18 @@ Jellyfin Playlists:                      ← Automatically created playlists
 - **Performance Optimized** — O(1) lookup performance using dictionary structures for large libraries
 - **Comprehensive Logging** — Detailed logging with troubleshooting guidance and progress tracking
 - **Idempotent Operations** — Safe to run multiple times, updates existing playlists without duplicates
+- **REST API** — Validate and manage configurations via HTTP endpoints
+
+## Configuration
+
+**Configuration is done via JSON file editing.** The plugin provides REST API endpoints for validation and management.
+
+📖 **See [CONFIGURATION.md](CONFIGURATION.md) for:**
+- Complete configuration guide
+- How to find Provider IDs
+- API endpoint documentation
+- Validation examples
+- Troubleshooting tips
 
 ## Requirements
 
@@ -92,7 +104,25 @@ Create `/config/timeline_manager_config.json` in your Jellyfin config directory:
 }
 ```
 
-### 2. Run Timeline Task
+**📖 See [CONFIGURATION.md](CONFIGURATION.md) for detailed configuration guide, examples, and API documentation.**
+
+### 2. Validate Configuration (Optional)
+
+Use the REST API to validate your configuration before running:
+
+```bash
+# Test API connection
+curl http://localhost:8096/Timeline/Test
+
+# Validate configuration (checks if items exist in your library)
+curl -X POST http://localhost:8096/Timeline/Validate \
+  -H "Content-Type: application/json" \
+  -d '{"jsonContent": "{\"universes\":[...]}"}'
+```
+
+The validation endpoint will tell you exactly which items are found or missing in your Jellyfin library.
+
+### 3. Run Timeline Task
 
 1. Go to **Dashboard → Scheduled Tasks**
 2. Find **"Universal Timeline Manager"**

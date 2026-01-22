@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.TimelineManager.Models;
 using Jellyfin.Plugin.TimelineManager.Services;
+using MediaBrowser.Controller.Library;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,15 +23,18 @@ namespace Jellyfin.Plugin.TimelineManager.Api;
 public class TimelineConfigController : ControllerBase
 {
     private readonly ILogger<TimelineConfigController> _logger;
+    private readonly ILibraryManager _libraryManager;
     private readonly string _configPath;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TimelineConfigController"/> class.
     /// </summary>
     /// <param name="logger">Logger instance.</param>
-    public TimelineConfigController(ILogger<TimelineConfigController> logger)
+    /// <param name="libraryManager">Jellyfin library manager.</param>
+    public TimelineConfigController(ILogger<TimelineConfigController> logger, ILibraryManager libraryManager)
     {
         _logger = logger;
+        _libraryManager = libraryManager;
         _configPath = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "jellyfin",
@@ -47,6 +53,8 @@ public class TimelineConfigController : ControllerBase
     {
         try
         {
+            _logger.LogInformation("[Timeline API] GetConfiguration called");
+            
             if (!System.IO.File.Exists(_configPath))
             {
                 _logger.LogInformation("Configuration file not found, returning empty config");
@@ -56,6 +64,7 @@ public class TimelineConfigController : ControllerBase
             var jsonContent = await System.IO.File.ReadAllTextAsync(_configPath);
             var config = JsonSerializer.Deserialize<object>(jsonContent);
             
+            _logger.LogInformation("[Timeline API] Returning configuration");
             return Ok(config);
         }
         catch (Exception ex)
@@ -66,13 +75,29 @@ public class TimelineConfigController : ControllerBase
     }
 
     /// <summary>
+    /// Diagnostic endpoint to test if API is working.
+    /// </summary>
+    [HttpGet("Test")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public ActionResult<object> TestEndpoint()
+    {
+        _logger.LogInformation("[Timeline API] Test endpoint called - API IS WORKING!");
+        return Ok(new { 
+            status = "API is working!", 
+            timestamp = DateTime.UtcNow,
+            message = "If you see this, the Timeline API controller is loaded and responding"
+        });
+    }
+
+    /// <summary>
     /// Validates the provided timeline configuration.
     /// </summary>
     /// <param name="request">The configuration validation request.</param>
     /// <returns>Validation result.</returns>
     [HttpPost("Validate")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<ValidationResponse> ValidateConfiguration([FromBody] ConfigRequest request)
+    public async Task<ActionResult<ValidationResponse>> ValidateConfiguration([FromBody] ConfigRequest request)
     {
         try
         {
@@ -100,16 +125,67 @@ public class TimelineConfigController : ControllerBase
                 });
             }
 
-            // Validate configuration
+            // Validate configuration structure
             var validationResult = configService.ValidateConfiguration(config);
+            
+            if (!validationResult.IsValid)
+            {
+                return Ok(new ValidationResponse
+                {
+                    IsValid = false,
+                    Errors = validationResult.Errors.ToArray(),
+                    Message = "Configuration has validation errors"
+                });
+            }
+
+            // Now validate that content actually exists in Jellyfin
+            var lookupLogger = loggerFactory.CreateLogger<ContentLookupService>();
+            var lookupService = new ContentLookupService(lookupLogger, _libraryManager);
+            
+            _logger.LogInformation("Building lookup tables to validate content exists in library");
+            lookupService.BuildLookupTables();
+            
+            var contentErrors = new List<string>();
+            var foundCount = 0;
+            var totalCount = 0;
+
+            foreach (var universe in config.Universes)
+            {
+                foreach (var item in universe.Items)
+                {
+                    totalCount++;
+                    var itemId = lookupService.FindItemByProviderId(item.ProviderId, item.ProviderName, item.Type);
+                    
+                    if (itemId.HasValue)
+                    {
+                        foundCount++;
+                        _logger.LogDebug("✓ Found {Type} with {Provider}:{ProviderId} in library", 
+                            item.Type, item.ProviderName, item.ProviderId);
+                    }
+                    else
+                    {
+                        var errorMsg = $"✗ {universe.Name}: {item.Type} with {item.ProviderName}:{item.ProviderId} NOT FOUND in your Jellyfin library";
+                        contentErrors.Add(errorMsg);
+                        _logger.LogWarning(errorMsg);
+                    }
+                }
+            }
+
+            if (contentErrors.Count > 0)
+            {
+                return Ok(new ValidationResponse
+                {
+                    IsValid = false,
+                    Errors = contentErrors.ToArray(),
+                    Message = $"Found {foundCount}/{totalCount} items in your library. {contentErrors.Count} items are missing."
+                });
+            }
             
             return Ok(new ValidationResponse
             {
-                IsValid = validationResult.IsValid,
-                Errors = validationResult.Errors.ToArray(),
-                Message = validationResult.IsValid 
-                    ? "Configuration is valid!" 
-                    : "Configuration has validation errors"
+                IsValid = true,
+                Message = $"✓ Configuration is valid! All {totalCount} items found in your Jellyfin library.",
+                Errors = Array.Empty<string>()
             });
         }
         catch (JsonException ex)
