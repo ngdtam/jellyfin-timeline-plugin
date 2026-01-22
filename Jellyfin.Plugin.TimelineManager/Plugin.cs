@@ -56,8 +56,8 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
         {
             new PluginPageInfo
             {
-                Name = "Universal Timeline Manager",
-                EmbeddedResourcePath = "Jellyfin.Plugin.TimelineManager.Configuration.configPage.html"
+                Name = this.Name,
+                EmbeddedResourcePath = GetType().Namespace + ".Configuration.configPage.html"
             }
         };
     }
