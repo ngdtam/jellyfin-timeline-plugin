@@ -1,28 +1,21 @@
-# Universal Timeline Manager - Configuration Guide
+# Configuration Guide
 
-## Overview
+## What You Need to Know
 
-The Universal Timeline Manager plugin creates chronological playlists for cinematic universes (Marvel, DC, Star Wars, etc.) in Jellyfin. Configuration is done via a JSON file that you edit directly.
+This plugin reads a simple text file (JSON format) that lists which movies and TV shows to include in your chronological playlists. Don't worry if you've never edited JSON before — it's just text with some specific formatting rules.
 
-## Configuration File Location
+## Where is the Configuration File?
 
-The configuration file is located at:
-```
-/config/timeline_manager_config.json
-```
+The file must be at: `/config/timeline_manager_config.json`
 
-**For Docker users:**
-```bash
-# Access the file in your Jellyfin container
-docker exec -it <container-name> cat /config/timeline_manager_config.json
+**Where is `/config`?**
+- **Windows:** `C:\ProgramData\Jellyfin\Server\config\`
+- **Linux:** `/var/lib/jellyfin/config/`
+- **Docker:** Inside the container at `/config/` (or wherever you mounted it)
 
-# Or edit it directly on your host if you have a volume mounted
-# Example: /path/to/jellyfin/config/timeline_manager_config.json
-```
+## Basic Structure
 
-## Configuration Format
-
-### Basic Structure
+Here's the simplest possible configuration:
 
 ```json
 {
@@ -47,39 +40,41 @@ docker exec -it <container-name> cat /config/timeline_manager_config.json
 }
 ```
 
-### Field Descriptions
+**What each part means:**
 
-#### Universe Object
-- **key** (string, required): Unique identifier for the universe (e.g., "mcu", "dceu", "star-wars")
-- **name** (string, required): Display name shown in Jellyfin (e.g., "Marvel Cinematic Universe")
-- **items** (array, required): List of movies and TV episodes in chronological order
+- `universes` — The list of all your playlists (you can have multiple)
+- `key` — A short name for the playlist (no spaces, lowercase)
+- `name` — The actual playlist name you'll see in Jellyfin
+- `items` — The list of movies/shows in this playlist
+- `providerId` — The ID number from TMDB or IMDB
+- `providerName` — Either `"tmdb"` or `"imdb"`
+- `type` — Either `"movie"` or `"episode"`
 
-#### Item Object
-- **providerId** (string, required): The TMDB or IMDB ID for the content
-- **providerName** (string, required): Either "tmdb" or "imdb"
-- **type** (string, required): Either "movie" or "episode"
+## How to Find IDs
 
-## How to Find Provider IDs
-
-### Method 1: From TMDB
-1. Visit [themoviedb.org](https://www.themoviedb.org)
+**Method 1: From TMDB (Easiest)**
+1. Go to [themoviedb.org](https://www.themoviedb.org)
 2. Search for your movie or TV show
-3. Look at the URL: `https://www.themoviedb.org/movie/1771` → ID is `1771`
+3. Look at the URL: `https://www.themoviedb.org/movie/1771`
+4. The number at the end (`1771`) is your ID!
 
-### Method 2: From IMDB
-1. Visit [imdb.com](https://www.imdb.com)
-2. Search for your content
-3. Look at the URL: `https://www.imdb.com/title/tt0371746/` → ID is `tt0371746`
-
-### Method 3: From Jellyfin
-1. Right-click on the movie/episode in Jellyfin
-2. Select "Edit Metadata"
-3. Go to the "External IDs" tab
+**Method 2: From Jellyfin**
+1. Right-click the movie/show in Jellyfin
+2. Click "Edit Metadata"
+3. Go to "External IDs" tab
 4. Copy the TMDB or IMDB ID
+
+**Method 3: From IMDB**
+1. Go to [imdb.com](https://www.imdb.com)
+2. Search for your content
+3. Look at the URL: `https://www.imdb.com/title/tt0371746/`
+4. The part with "tt" (`tt0371746`) is your ID!
 
 ## Complete Examples
 
-### Marvel Cinematic Universe (MCU)
+Copy and paste these, then modify for your library!
+
+### Marvel Cinematic Universe
 
 ```json
 {
@@ -88,58 +83,34 @@ docker exec -it <container-name> cat /config/timeline_manager_config.json
       "key": "mcu",
       "name": "Marvel Cinematic Universe",
       "items": [
-        {
-          "providerId": "1771",
-          "providerName": "tmdb",
-          "type": "movie",
-          "note": "Captain America: The First Avenger (1942)"
-        },
-        {
-          "providerId": "10138",
-          "providerName": "tmdb",
-          "type": "movie",
-          "note": "Iron Man (2010)"
-        },
-        {
-          "providerId": "1399",
-          "providerName": "tmdb",
-          "type": "episode",
-          "note": "Agents of S.H.I.E.L.D. - Season 1"
-        }
+        {"providerId": "1771", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "10138", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "1399", "providerName": "tmdb", "type": "episode"}
       ]
     }
   ]
 }
 ```
 
-### DC Extended Universe (DCEU)
+### Star Wars
 
 ```json
 {
   "universes": [
     {
-      "key": "dceu",
-      "name": "DC Extended Universe",
+      "key": "star-wars",
+      "name": "Star Wars Saga",
       "items": [
-        {
-          "providerId": "209112",
-          "providerName": "tmdb",
-          "type": "movie",
-          "note": "Man of Steel"
-        },
-        {
-          "providerId": "209112",
-          "providerName": "tmdb",
-          "type": "movie",
-          "note": "Batman v Superman"
-        }
+        {"providerId": "1893", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "1894", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "1895", "providerName": "tmdb", "type": "movie"}
       ]
     }
   ]
 }
 ```
 
-### Multiple Universes
+### Multiple Universes in One File
 
 ```json
 {
@@ -148,156 +119,60 @@ docker exec -it <container-name> cat /config/timeline_manager_config.json
       "key": "mcu",
       "name": "Marvel Cinematic Universe",
       "items": [
-        {
-          "providerId": "1771",
-          "providerName": "tmdb",
-          "type": "movie"
-        }
-      ]
-    },
-    {
-      "key": "dceu",
-      "name": "DC Extended Universe",
-      "items": [
-        {
-          "providerId": "209112",
-          "providerName": "tmdb",
-          "type": "movie"
-        }
+        {"providerId": "1771", "providerName": "tmdb", "type": "movie"}
       ]
     },
     {
       "key": "star-wars",
       "name": "Star Wars Saga",
       "items": [
-        {
-          "providerId": "11",
-          "providerName": "tmdb",
-          "type": "movie"
-        }
+        {"providerId": "1893", "providerName": "tmdb", "type": "movie"}
       ]
     }
   ]
 }
 ```
 
-## API Endpoints
+**Want more?** Check the `configurations/` folder in the GitHub repository for complete MCU, DCEU, and Star Wars configurations!
 
-The plugin provides REST API endpoints for validation and management:
+## For Docker Users
 
-### Test API Connection
-```
-GET http://localhost:8096/Timeline/Test
-```
+If you're running Jellyfin in Docker:
 
-### Get Current Configuration
-```
-GET http://localhost:8096/Timeline/Config
+**Option 1: Edit on your computer (if you have a volume mounted)**
+```bash
+notepad C:\path\to\jellyfin\config\timeline_manager_config.json
 ```
 
-### Validate Configuration
+**Option 2: Copy out, edit, copy back**
+```bash
+docker cp jellyfin:/config/timeline_manager_config.json ./config.json
+# Edit the file
+docker cp ./config.json jellyfin:/config/timeline_manager_config.json
 ```
-POST http://localhost:8096/Timeline/Validate
-Content-Type: application/json
-
-{
-  "jsonContent": "{\"universes\":[...]}"
-}
-```
-
-**Response:**
-```json
-{
-  "isValid": true,
-  "message": "✓ Configuration is valid! All 10 items found in your Jellyfin library.",
-  "errors": []
-}
-```
-
-**Or if items are missing:**
-```json
-{
-  "isValid": false,
-  "message": "Found 5/10 items in your library. 5 items are missing.",
-  "errors": [
-    "✗ Marvel Cinematic Universe: movie with tmdb:1771 NOT FOUND in your Jellyfin library",
-    "✗ Marvel Cinematic Universe: episode with tmdb:1399 NOT FOUND in your Jellyfin library"
-  ]
-}
-```
-
-### Save Configuration
-```
-POST http://localhost:8096/Timeline/Save
-Content-Type: application/json
-
-{
-  "jsonContent": "{\"universes\":[...]}"
-}
-```
-
-## Validation
-
-The plugin validates your configuration against your actual Jellyfin library:
-
-✅ **Checks if content exists** - Verifies each Provider ID exists in your library
-✅ **Reports missing items** - Lists exactly which items are not found
-✅ **Validates JSON syntax** - Ensures proper JSON formatting
-✅ **Validates structure** - Checks required fields are present
 
 ## Troubleshooting
 
-### Configuration Not Loading
-1. Check file location: `/config/timeline_manager_config.json`
-2. Verify JSON syntax using a validator like [jsonlint.com](https://jsonlint.com)
-3. Check Jellyfin logs for errors
-
-### Items Not Found in Library
-1. Verify the Provider ID is correct (TMDB/IMDB)
-2. Ensure the content is actually in your Jellyfin library
-3. Check that metadata has been refreshed in Jellyfin
-4. Use the Validate API endpoint to see which items are missing
-
-### Playlist Not Created
-1. Ensure configuration is valid
-2. Check that at least one item from the universe exists in your library
-3. Restart Jellyfin after configuration changes
-
-## Docker Users
-
-### Edit Configuration File
-
-```bash
-# Method 1: Edit directly in container
-docker exec -it jellyfin-container vi /config/timeline_manager_config.json
-
-# Method 2: Copy out, edit, copy back
-docker cp jellyfin-container:/config/timeline_manager_config.json ./timeline_config.json
-# Edit the file locally
-docker cp ./timeline_config.json jellyfin-container:/config/timeline_manager_config.json
-
-# Method 3: Use volume mount (if configured)
-# Edit directly on host at your mounted config path
-nano /path/to/jellyfin/config/timeline_manager_config.json
-```
-
-### Restart Jellyfin
-```bash
-docker restart jellyfin-container
-```
-
-## Best Practices
-
-1. **Start small** - Begin with a few items and test before adding everything
-2. **Use validation** - Always validate before saving to catch errors early
-3. **Backup your config** - Keep a copy of your working configuration
-4. **Use comments** - While JSON doesn't support comments, you can add a "note" field for reference
-5. **Chronological order** - List items in the order you want them to appear in the playlist
-
-## Support
-
-If you encounter issues:
-1. Check the [GitHub Issues](https://github.com/ngdtam/jellyfin-timeline-plugin/issues)
-2. Validate your configuration using the API endpoint
+### File not loading?
+1. Check the file is at `/config/timeline_manager_config.json`
+2. Validate your JSON at [jsonlint.com](https://jsonlint.com) — one missing comma breaks everything!
 3. Check Jellyfin logs for error messages
-4. Provide your configuration (with sensitive data removed) when reporting issues
+
+### Movies/shows not found?
+1. Make sure the TMDB/IMDB ID is correct
+2. Check that the movie/show is actually in your Jellyfin library
+3. Try refreshing metadata in Jellyfin (right-click → Refresh Metadata)
+
+### Still having problems?
+- Visit [GitHub Issues](https://github.com/ngdtam/jellyfin-timeline-plugin/issues)
+- Check Jellyfin logs for error messages
+- Ask for help (include your config file, but remove any personal info!)
+
+## Tips
+
+1. **Start small** — Test with 2-3 movies first before adding everything
+2. **Check your commas** — JSON is picky! Every item needs a comma except the last one
+3. **Keep a backup** — Save a copy of your working configuration
+4. **Use the examples** — Copy from the `configurations/` folder and modify
+
+That's it! You're ready to create your chronological playlists. Happy watching! 🎬
