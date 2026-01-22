@@ -24,8 +24,8 @@ obj/
 .DS_Store
 Thumbs.db
 
-# Keep only essential files for plugin distribution
-# Remove development/analysis files
+# === DEVELOPMENT FILES - KEEP LOCAL ONLY ===
+# Specs and analysis
 .kiro/
 *ANALYSIS*
 *TROUBLESHOOTING*
@@ -38,3 +38,32 @@ FINAL_*
 PLUGIN_*
 DISTRIBUTION_*
 GITHUB_*
+
+# Test files
+*Tests/
+*.Tests/
+test/
+tests/
+
+# Development documentation
+CHECKPOINT_*
+*_SUMMARY.md
+*_GUIDE.md
+*_INSTRUCTIONS.md
+
+# Build artifacts
+release/
+dist/
+publish/
+
+# Deployment scripts (keep build-release.ps1 only)
+deploy-*
+open-*
+
+# === KEEP ONLY THESE FOR PUBLIC REPOSITORY ===
+# ✅ Plugin source code (Jellyfin.Plugin.TimelineManager/)
+# ✅ Sample configurations (configurations/)
+# ✅ Documentation (README.md, LICENSE)
+# ✅ Logo/assets (images/)
+# ✅ Build scripts (build-release.ps1)
+# ✅ Plugin manifest (manifest.json)
