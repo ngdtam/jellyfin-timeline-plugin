@@ -73,8 +73,10 @@
     </div>
 
     <script type="text/javascript">
+        console.log('[Timeline] Script file loaded - IMMEDIATE');
+        
         (() => {
-            console.log('[Timeline] Script executing');
+            console.log('[Timeline] IIFE executing');
             
             var sampleConfig = {
                 "universes": [
@@ -261,6 +263,31 @@
                 });
                 
                 console.log('[Timeline] Initialization complete');
+            });
+            
+            // Fallback: also try DOMContentLoaded
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('[Timeline] DOMContentLoaded fired');
+                var page = document.querySelector('#timelineConfigPage');
+                if (page) {
+                    console.log('[Timeline] Page element found, setting up listeners');
+                    loadConfiguration();
+                    
+                    document.querySelector('#validateBtn').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        validateConfiguration();
+                    });
+                    
+                    document.querySelector('#saveBtn').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        saveConfiguration();
+                    });
+                    
+                    document.querySelector('#loadSampleBtn').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        loadSample();
+                    });
+                }
             });
         })();
     </script>
