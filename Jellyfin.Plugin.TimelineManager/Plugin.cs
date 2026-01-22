@@ -215,8 +215,13 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
     /// <inheritdoc />
     public IEnumerable<PluginPageInfo> GetPages()
     {
-        // Currently no web pages - could be extended in the future for configuration UI
-        _logger.LogDebug("GetPages called - returning empty collection (no web UI currently implemented)");
-        return Array.Empty<PluginPageInfo>();
+        return new[]
+        {
+            new PluginPageInfo
+            {
+                Name = "Universal Timeline Manager",
+                EmbeddedResourcePath = GetType().Namespace + ".Configuration.configPage.html"
+            }
+        };
     }
 }

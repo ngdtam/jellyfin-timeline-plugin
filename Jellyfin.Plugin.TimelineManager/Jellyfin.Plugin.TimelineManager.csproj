@@ -50,6 +50,12 @@
     <PackageReference Include="Jellyfin.Model" Version="10.11.5" />
     <PackageReference Include="Jellyfin.Controller" Version="10.11.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
+  </ItemGroup>
+
+  <!-- Embedded Resources -->
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\configPage.html" />
   </ItemGroup>
 
   <!-- Include additional files in output -->
