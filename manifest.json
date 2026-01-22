@@ -6,7 +6,7 @@
     "description": "Creates chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) based on JSON configuration files. Features Provider_ID matching with TMDB/IMDB for accurate content identification, mixed content support (movies + TV episodes), and comprehensive error handling. Simple JSON-based configuration with clear documentation and examples provided in the plugin configuration page.",
     "owner": "ngdtam",
     "category": "General",
-    "imageUrl": "https://raw.githubusercontent.com/ngdtam/jellyfin-timeline-plugin/main/images/logo.png",
+    "imageUrl": "https://raw.githubusercontent.com/ngdtam/jellyfin-timeline-plugin/main/images/logo.svg",
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
