@@ -10,6 +10,14 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
+        "version": "1.2.6.0",
+        "changelog": "## v1.2.6 - Version Fix + Debug\n\n### ✨ Fixed\n- **Correct Version Display** — Now shows 1.2.6.0 instead of 1.0.0.0\n- **Enhanced Debugging** — Multiple console logs to diagnose script loading\n- **DOMContentLoaded Fallback** — Added fallback initialization method\n\n**Version should now display correctly in Jellyfin!**",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.2.6/jellyfin-timeline-manager-v1.2.6.zip",
+        "checksum": "1B057D70968D82DFAAE5E413997C8329",
+        "timestamp": "2026-01-22T21:15:00Z"
+      },
+      {
         "version": "1.2.5.0",
         "changelog": "## v1.2.5 - Enhanced Debug\n\n### 🔧 Debug\n- **Immediate Console Log** — Script logs before any event listeners\n- **DOMContentLoaded Fallback** — Added fallback initialization\n- **Multiple Init Attempts** — Tries both pageshow and DOMContentLoaded\n\n**This will help us see if the script loads at all.**",
         "targetAbi": "10.10.0.0",

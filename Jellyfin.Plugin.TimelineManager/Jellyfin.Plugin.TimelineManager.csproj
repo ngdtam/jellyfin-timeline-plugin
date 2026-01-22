@@ -6,15 +6,15 @@
     <Nullable>enable</Nullable>
     
     <!-- Plugin Metadata -->
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
-    <InformationalVersion>1.0.0</InformationalVersion>
+    <AssemblyVersion>1.2.5.0</AssemblyVersion>
+    <FileVersion>1.2.5.0</FileVersion>
+    <InformationalVersion>1.2.5</InformationalVersion>
     <Product>Universal Timeline Manager</Product>
     <Title>Jellyfin Universal Timeline Manager Plugin</Title>
-    <Authors>Kiro</Authors>
-    <Company>Kiro</Company>
+    <Authors>ngdtam</Authors>
+    <Company>ngdtam</Company>
     <Description>Auto-generate chronological playlists for multiple cinematic universes (Marvel, DC, Star Wars, etc.) based on JSON configuration files. Supports mixed content types and Provider_ID matching for accurate content identification.</Description>
-    <Copyright>Copyright © 2025 Kiro</Copyright>
+    <Copyright>Copyright © 2026 ngdtam</Copyright>
     
     <!-- Plugin Configuration -->
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
