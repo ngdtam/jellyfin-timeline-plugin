@@ -4,6 +4,87 @@
         <name>Jellyfin.Plugin.TimelineManager</name>
     </assembly>
     <members>
+        <member name="T:Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController">
+            <summary>
+            API controller for timeline configuration management.
+            </summary>
+        </member>
+        <member name="M:Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController.#ctor(Microsoft.Extensions.Logging.ILogger{Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController"/> class.
+            </summary>
+            <param name="logger">Logger instance.</param>
+        </member>
+        <member name="M:Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController.GetConfiguration">
+            <summary>
+            Gets the current timeline configuration.
+            </summary>
+            <returns>The configuration JSON or empty object if not found.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController.ValidateConfiguration(Jellyfin.Plugin.TimelineManager.Api.ConfigRequest)">
+            <summary>
+            Validates the provided timeline configuration.
+            </summary>
+            <param name="request">The configuration validation request.</param>
+            <returns>Validation result.</returns>
+        </member>
+        <member name="M:Jellyfin.Plugin.TimelineManager.Api.TimelineConfigController.SaveConfiguration(Jellyfin.Plugin.TimelineManager.Api.ConfigRequest)">
+            <summary>
+            Saves the timeline configuration to file.
+            </summary>
+            <param name="request">The configuration save request.</param>
+            <returns>Save result.</returns>
+        </member>
+        <member name="T:Jellyfin.Plugin.TimelineManager.Api.ConfigRequest">
+            <summary>
+            Request model for configuration operations.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.TimelineManager.Api.ConfigRequest.JsonContent">
+            <summary>
+            Gets or sets the JSON content.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.TimelineManager.Api.ValidationResponse">
+            <summary>
+            Response model for validation operations.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.TimelineManager.Api.ValidationResponse.IsValid">
+            <summary>
+            Gets or sets a value indicating whether the configuration is valid.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.TimelineManager.Api.ValidationResponse.Message">
+            <summary>
+            Gets or sets the validation message.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.TimelineManager.Api.ValidationResponse.Errors">
+            <summary>
+            Gets or sets the validation errors.
+            </summary>
+        </member>
+        <member name="T:Jellyfin.Plugin.TimelineManager.Api.SaveResponse">
+            <summary>
+            Response model for save operations.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.TimelineManager.Api.SaveResponse.Success">
+            <summary>
+            Gets or sets a value indicating whether the save was successful.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.TimelineManager.Api.SaveResponse.Message">
+            <summary>
+            Gets or sets the response message.
+            </summary>
+        </member>
+        <member name="P:Jellyfin.Plugin.TimelineManager.Api.SaveResponse.Errors">
+            <summary>
+            Gets or sets any errors that occurred.
+            </summary>
+        </member>
         <member name="T:Jellyfin.Plugin.TimelineManager.PluginConfiguration">
             <summary>
             Plugin configuration for the Universal Timeline Manager.
