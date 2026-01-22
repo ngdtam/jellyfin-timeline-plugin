@@ -21,7 +21,7 @@
         "version": "1.1.9.0",
         "changelog": "## v1.1.9 - Jellyfin UI Compliance\n\n### 🔧 Fix\n- **Proper Jellyfin HTML Structure** — Updated config page with data-role, emby-button components\n- **Jellyfin Styling** — Now uses native Jellyfin UI classes and structure\n\n**Configuration page now displays correctly with Jellyfin styling.**",
         "targetAbi": "10.10.0.0",
-        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.9/jellyfin-timeline-manager-v1.2.0.zip",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.9/jellyfin-timeline-manager-v1.1.9.zip",
         "checksum": "4E0245333134E44D599140824BE35BDA",
         "timestamp": "2026-01-22T18:30:00Z"
       },
