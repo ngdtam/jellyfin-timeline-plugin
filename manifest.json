@@ -12,17 +12,17 @@
       {
         "version": "1.1.0.0",
         "changelog": "## What's Changed\n\n### ✨ New Features\n- **🎨 Visual Web Interface** — Complete drag-and-drop timeline configuration directly in Jellyfin\n- **📚 Library Integration** — Browse all movies and TV shows with Provider IDs displayed\n- **🔍 Smart Search** — Find content quickly with real-time search functionality\n- **📱 Mobile-Responsive Design** — Works perfectly on phones, tablets, and desktops\n\n### 🚀 User Experience Improvements\n- **No Technical Knowledge Required** — Perfect for non-tech-savvy users\n- **Instant Visual Feedback** — See your timeline as you build it\n- **Error Prevention** — Built-in validation prevents duplicate items\n- **One-Click Operations** — Save configuration and run tasks with single clicks\n\n### 🔧 Technical Enhancements\n- **RESTful API Integration** — Seamless communication with Jellyfin\n- **Real-Time Configuration Updates** — Changes are reflected immediately\n- **Enhanced Error Handling** — Better user feedback for all operations\n- **Performance Optimizations** — Faster loading and smoother interactions\n\n**Full Changelog**: https://github.com/ngdtam/jellyfin-timeline-plugin/compare/v1.0.0...v1.1.0",
-        "targetAbi": "10.11.6.0",
+        "targetAbi": "10.10.0.0",
         "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.1.0/Jellyfin.Plugin.TimelineManager.dll",
-        "checksum": "AC7AA16EB92B1E005206F2AF0D30FD649590B25764D23DA9910B29F63EBD45A1",
+        "checksum": "2C3E530D6EFB1C7C539DEE15B71D275DD82CCB15FD127A46A8D5570B50A6132B",
         "timestamp": "2025-01-22T12:00:00Z"
       },
       {
         "version": "1.0.0.0",
         "changelog": "## What's Changed\n\n### ✨ New Features\n- **Multiple Universe Support** — Configure unlimited cinematic universes\n- **Mixed Content Types** — Movies and TV episodes in same playlist\n- **Provider_ID Matching** — TMDB and IMDB identifiers for accuracy\n- **Error Resilience** — Graceful handling of missing items\n- **Performance Optimized** — O(1) lookup for large libraries\n- **Comprehensive Logging** — Detailed troubleshooting support\n\n### 🧪 Quality Assurance\n- **11 Property-based tests** validating correctness properties\n- **Integration tests** for end-to-end workflows\n- **Error scenario testing** for resilience and recovery\n- **Performance testing** for large media libraries\n\n**Full Changelog**: Initial release with complete feature set",
-        "targetAbi": "10.11.6.0",
+        "targetAbi": "10.10.0.0",
         "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v1.0.0/Jellyfin.Plugin.TimelineManager.dll",
-        "checksum": "76CF88B9C72AB0DACC8BBA5344639D27D7F76B92A483DE78BD6441CB008F38D2",
+        "checksum": "2C3E530D6EFB1C7C539DEE15B71D275DD82CCB15FD127A46A8D5570B50A6132B",
         "timestamp": "2025-01-22T00:00:00Z"
       }
     ]
