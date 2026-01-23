@@ -64,12 +64,13 @@ public class ContentLookupService
             ClearLookupTables();
 
             // Get all media items from the library
-            var libraryItems = _libraryManager.GetItemList(new InternalItemsQuery
+            var queryResult = _libraryManager.GetItemsResult(new InternalItemsQuery
             {
                 IncludeItemTypes = new[] { Jellyfin.Data.Enums.BaseItemKind.Movie, Jellyfin.Data.Enums.BaseItemKind.Series, Jellyfin.Data.Enums.BaseItemKind.Episode },
                 Recursive = true
             });
 
+            var libraryItems = queryResult.Items;
             _logger.LogDebug("Found {ItemCount} total items in library", libraryItems.Count);
 
             var indexedCount = 0;

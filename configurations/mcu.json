@@ -1,0 +1,55 @@
+{
+  "universes": [
+    {
+      "key": "mcu",
+      "name": "Marvel Cinematic Universe",
+      "items": [
+        {
+          "providerId": "241388",
+          "providerName": "tmdb",
+          "type": "episode"
+        },
+        {
+          "providerId": "1771",
+          "providerName": "tmdb",
+          "type": "movie"
+        },
+        {
+          "providerId": "211387",
+          "providerName": "tmdb",
+          "type": "movie"
+        },
+        {
+          "providerId": "61550",
+          "providerName": "tmdb",
+          "type": "episode"
+        },
+        {
+          "providerId": "299537",
+          "providerName": "tmdb",
+          "type": "movie"
+        },
+        {
+          "providerId": "1726",
+          "providerName": "tmdb",
+          "type": "movie"
+        },
+        {
+          "providerId": "10138",
+          "providerName": "tmdb",
+          "type": "movie"
+        },
+        {
+          "providerId": "76535",
+          "providerName": "tmdb",
+          "type": "movie"
+        },
+        {
+          "providerId": "10195",
+          "providerName": "tmdb",
+          "type": "movie"
+        }
+      ]
+    }
+  ]
+}
