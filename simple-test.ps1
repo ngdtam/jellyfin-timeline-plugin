@@ -105,13 +105,29 @@ try {
     if ($validateResult.isValid) {
         Write-Host "SUCCESS: VALIDATION PASSED!" -ForegroundColor Green
         Write-Host $validateResult.message -ForegroundColor Green
+        Write-Host ""
+        Write-Host "Items Found in Library:" -ForegroundColor Green
+        foreach ($item in $validateResult.foundItems) {
+            Write-Host "  $item" -ForegroundColor Green
+        }
     } else {
         Write-Host "FAILED: VALIDATION FAILED" -ForegroundColor Red
         Write-Host $validateResult.message -ForegroundColor Yellow
         Write-Host ""
-        Write-Host "Errors:" -ForegroundColor Red
-        foreach ($error in $validateResult.errors) {
-            Write-Host "  - $error" -ForegroundColor Red
+        
+        if ($validateResult.foundItems -and $validateResult.foundItems.Count -gt 0) {
+            Write-Host "Items Found in Library ($($validateResult.foundItems.Count)):" -ForegroundColor Green
+            foreach ($item in $validateResult.foundItems) {
+                Write-Host "  $item" -ForegroundColor Green
+            }
+            Write-Host ""
+        }
+        
+        if ($validateResult.errors -and $validateResult.errors.Count -gt 0) {
+            Write-Host "Items Missing from Library ($($validateResult.errors.Count)):" -ForegroundColor Red
+            foreach ($error in $validateResult.errors) {
+                Write-Host "  $error" -ForegroundColor Red
+            }
         }
     }
 } catch {

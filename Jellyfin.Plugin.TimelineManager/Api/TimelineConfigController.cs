@@ -146,6 +146,7 @@ public class TimelineConfigController : ControllerBase
             lookupService.BuildLookupTables();
             
             var contentErrors = new List<string>();
+            var foundItems = new List<string>();
             var foundCount = 0;
             var totalCount = 0;
 
@@ -159,12 +160,17 @@ public class TimelineConfigController : ControllerBase
                     if (itemId.HasValue)
                     {
                         foundCount++;
+                        // Get the actual item to retrieve its name
+                        var jellyfinItem = _libraryManager.GetItemById(itemId.Value);
+                        var itemName = jellyfinItem?.Name ?? "Unknown";
+                        var foundMsg = $"✓ {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}";
+                        foundItems.Add(foundMsg);
                         _logger.LogDebug("✓ Found {Type} with {Provider}:{ProviderId} in library", 
                             item.Type, item.ProviderName, item.ProviderId);
                     }
                     else
                     {
-                        var errorMsg = $"✗ {universe.Name}: {item.Type} with {item.ProviderName}:{item.ProviderId} NOT FOUND in your Jellyfin library";
+                        var errorMsg = $"✗ {universe.Name}: {item.Type} with {item.ProviderName}:{item.ProviderId} NOT FOUND";
                         contentErrors.Add(errorMsg);
                         _logger.LogWarning(errorMsg);
                     }
@@ -177,6 +183,7 @@ public class TimelineConfigController : ControllerBase
                 {
                     IsValid = false,
                     Errors = contentErrors.ToArray(),
+                    FoundItems = foundItems.ToArray(),
                     Message = $"Found {foundCount}/{totalCount} items in your library. {contentErrors.Count} items are missing."
                 });
             }
@@ -185,6 +192,7 @@ public class TimelineConfigController : ControllerBase
             {
                 IsValid = true,
                 Message = $"✓ Configuration is valid! All {totalCount} items found in your Jellyfin library.",
+                FoundItems = foundItems.ToArray(),
                 Errors = Array.Empty<string>()
             });
         }
@@ -321,6 +329,11 @@ public class ValidationResponse
     /// Gets or sets the validation errors.
     /// </summary>
     public string[] Errors { get; set; } = Array.Empty<string>();
+
+    /// <summary>
+    /// Gets or sets the items that were found in the library.
+    /// </summary>
+    public string[] FoundItems { get; set; } = Array.Empty<string>();
 }
 
 /// <summary>

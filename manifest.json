@@ -14,7 +14,7 @@
         "changelog": "## v0.3.0 - Beta Release\n\n**⚠️ BETA VERSION - Not Production Ready**\n\nThis is a beta release for testing purposes. Features may change.\n\n### ✨ Features\n- **REST API** — Validate and manage configurations via HTTP endpoints\n- **Library Validation** — API checks if configured items exist in your Jellyfin library\n- **JSON Configuration** — Simple file-based configuration\n- **Comprehensive Documentation** — See CONFIGURATION.md for complete guide\n\n### API Endpoints\n- `GET /Timeline/Test` — Test API connection\n- `GET /Timeline/Config` — Get current configuration\n- `POST /Timeline/Validate` — Validate configuration and check library\n- `POST /Timeline/Save` — Save configuration\n\n**Note:** This is API-only. No web UI. Configuration via JSON file editing.",
         "targetAbi": "10.10.0.0",
         "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v0.3.0/jellyfin-timeline-manager-v0.3.0.zip",
-        "checksum": "F6186B6B4E7510B2FFC0F21C4368271D",
+        "checksum": "9C9812E2534FC9B87401636F4BB037CC",
         "timestamp": "2026-01-22T22:00:00Z"
       }
     ]
