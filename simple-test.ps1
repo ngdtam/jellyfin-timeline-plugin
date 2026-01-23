@@ -118,7 +118,8 @@ try {
         if ($validateResult.foundItems -and $validateResult.foundItems.Count -gt 0) {
             Write-Host "Items Found in Library ($($validateResult.foundItems.Count)):" -ForegroundColor Green
             foreach ($item in $validateResult.foundItems) {
-                Write-Host "  $item" -ForegroundColor Green
+                $cleanItem = $item -replace '^\[FOUND\]\s*', ''
+                Write-Host "  $cleanItem" -ForegroundColor Green
             }
             Write-Host ""
         }
@@ -126,7 +127,8 @@ try {
         if ($validateResult.errors -and $validateResult.errors.Count -gt 0) {
             Write-Host "Items Missing from Library ($($validateResult.errors.Count)):" -ForegroundColor Red
             foreach ($error in $validateResult.errors) {
-                Write-Host "  $error" -ForegroundColor Red
+                $cleanError = $error -replace '^\[MISSING\]\s*', ''
+                Write-Host "  $cleanError" -ForegroundColor Red
             }
         }
     }

@@ -150,6 +150,11 @@ public class TimelineConfigController : ControllerBase
             var foundCount = 0;
             var totalCount = 0;
 
+            // Create HTTP client for TMDB API lookups
+            using var httpClient = new System.Net.Http.HttpClient();
+            httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
+            httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+
             foreach (var universe in config.Universes)
             {
                 foreach (var item in universe.Items)
@@ -163,14 +168,16 @@ public class TimelineConfigController : ControllerBase
                         // Get the actual item to retrieve its name
                         var jellyfinItem = _libraryManager.GetItemById(itemId.Value);
                         var itemName = jellyfinItem?.Name ?? "Unknown";
-                        var foundMsg = $"✓ {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}";
+                        var foundMsg = $"[FOUND] {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}";
                         foundItems.Add(foundMsg);
-                        _logger.LogDebug("✓ Found {Type} with {Provider}:{ProviderId} in library", 
+                        _logger.LogDebug("Found {Type} with {Provider}:{ProviderId} in library", 
                             item.Type, item.ProviderName, item.ProviderId);
                     }
                     else
                     {
-                        var errorMsg = $"✗ {universe.Name}: {item.Type} with {item.ProviderName}:{item.ProviderId} NOT FOUND";
+                        // Try to fetch the name from TMDB
+                        var itemName = await FetchTmdbTitle(httpClient, item.ProviderId, item.ProviderName, item.Type);
+                        var errorMsg = $"[MISSING] {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}";
                         contentErrors.Add(errorMsg);
                         _logger.LogWarning(errorMsg);
                     }
@@ -191,7 +198,7 @@ public class TimelineConfigController : ControllerBase
             return Ok(new ValidationResponse
             {
                 IsValid = true,
-                Message = $"✓ Configuration is valid! All {totalCount} items found in your Jellyfin library.",
+                Message = $"Configuration is valid! All {totalCount} items found in your Jellyfin library.",
                 FoundItems = foundItems.ToArray(),
                 Errors = Array.Empty<string>()
             });
@@ -295,6 +302,72 @@ public class TimelineConfigController : ControllerBase
                 Success = false,
                 Message = $"Error saving configuration: {ex.Message}"
             });
+        }
+    }
+
+    /// <summary>
+    /// Fetches the title of a movie or TV series from TMDB website.
+    /// </summary>
+    /// <param name="httpClient">HTTP client for making requests.</param>
+    /// <param name="providerId">The TMDB ID.</param>
+    /// <param name="providerName">The provider name (tmdb or imdb).</param>
+    /// <param name="contentType">The content type (movie or episode).</param>
+    /// <returns>The title of the item, or a fallback string if not found.</returns>
+    private async Task<string> FetchTmdbTitle(System.Net.Http.HttpClient httpClient, string providerId, string providerName, string contentType)
+    {
+        // Only support TMDB lookups for now
+        if (providerName.ToLowerInvariant() != "tmdb")
+        {
+            return $"Unknown {contentType} (ID:{providerId})";
+        }
+
+        try
+        {
+            string url;
+            string titlePattern;
+            
+            if (contentType.ToLowerInvariant() == "movie")
+            {
+                url = $"https://www.themoviedb.org/movie/{providerId}";
+                titlePattern = @"<title>(.+?)\s*\(\d{4}\)";
+            }
+            else if (contentType.ToLowerInvariant() == "episode")
+            {
+                // For episodes, the providerId is actually the series ID
+                // Fetch the series name instead
+                url = $"https://www.themoviedb.org/tv/{providerId}";
+                titlePattern = @"<title>(.+?)\s*\(TV Series";
+            }
+            else
+            {
+                return $"Unknown {contentType} (TMDB:{providerId})";
+            }
+
+            var html = await httpClient.GetStringAsync(url);
+            
+            // Extract title from HTML <title> tag
+            var titleMatch = System.Text.RegularExpressions.Regex.Match(html, titlePattern);
+            if (titleMatch.Success && titleMatch.Groups.Count > 1)
+            {
+                var title = titleMatch.Groups[1].Value.Trim();
+                // Remove any HTML entities
+                title = System.Net.WebUtility.HtmlDecode(title);
+                
+                // Add "(series)" suffix for TV shows to distinguish from movies
+                if (contentType.ToLowerInvariant() == "episode")
+                {
+                    title = $"{title} (series)";
+                }
+                
+                return title;
+            }
+            
+            return $"Unknown {contentType} (TMDB:{providerId})";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Failed to fetch TMDB title for {ProviderId}: {Message}", providerId, ex.Message);
+            return $"Unknown {contentType} (TMDB:{providerId})";
         }
     }
 }
