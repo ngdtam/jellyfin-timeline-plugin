@@ -83,8 +83,7 @@ public class PlaylistCreationController : ControllerBase
 
             // Get API key from plugin configuration (for future use if needed)
             var config = Plugin.Instance?.Configuration as PluginConfiguration;
-            var apiKey = config?.JellyfinApiKey;
-            _logger.LogInformation("[Timeline API] API Key configured: {HasApiKey}", !string.IsNullOrEmpty(apiKey));
+            _logger.LogDebug("[Timeline API] Plugin configuration loaded");
 
             // Create logger for the service
             var serviceLogger = LoggerFactory.Create(builder => builder.AddConsole())

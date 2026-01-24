@@ -1,0 +1,28 @@
+{
+  "universes": [
+    {
+      "key": "example",
+      "name": "Example Timeline",
+      "items": [
+        {
+          "providerId": "1771",
+          "providerName": "tmdb",
+          "type": "movie",
+          "comment": "Captain America: The First Avenger"
+        },
+        {
+          "providerId": "1726",
+          "providerName": "tmdb",
+          "type": "movie",
+          "comment": "Iron Man"
+        },
+        {
+          "providerId": "10138",
+          "providerName": "tmdb",
+          "type": "movie",
+          "comment": "Iron Man 2"
+        }
+      ]
+    }
+  ]
+}

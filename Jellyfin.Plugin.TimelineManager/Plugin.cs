@@ -33,6 +33,83 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
         
         _logger.LogInformation("Universal Timeline Manager plugin initialized with ID: {PluginId}", Id);
         _logger.LogDebug("Plugin instance created at {Timestamp}", DateTime.UtcNow);
+        
+        // Auto-create default configuration file if it doesn't exist
+        InitializeDefaultConfiguration();
+    }
+    
+    /// <summary>
+    /// Creates a default configuration file if one doesn't exist.
+    /// </summary>
+    private void InitializeDefaultConfiguration()
+    {
+        try
+        {
+            var configPath = System.IO.Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "jellyfin",
+                "config",
+                "timeline_manager_config.json"
+            );
+            
+            // Check if config file already exists
+            if (System.IO.File.Exists(configPath))
+            {
+                _logger.LogDebug("Configuration file already exists at {ConfigPath}", configPath);
+                return;
+            }
+            
+            _logger.LogInformation("Configuration file not found. Creating default configuration at {ConfigPath}", configPath);
+            
+            // Ensure directory exists
+            var directory = System.IO.Path.GetDirectoryName(configPath);
+            if (!string.IsNullOrEmpty(directory) && !System.IO.Directory.Exists(directory))
+            {
+                System.IO.Directory.CreateDirectory(directory);
+                _logger.LogDebug("Created configuration directory: {Directory}", directory);
+            }
+            
+            // Read embedded default config
+            var assembly = GetType().Assembly;
+            var resourceName = "Jellyfin.Plugin.TimelineManager.Configuration.default_config.json";
+            
+            using var stream = assembly.GetManifestResourceStream(resourceName);
+            if (stream == null)
+            {
+                _logger.LogWarning("Could not find embedded default configuration resource");
+                
+                // Fallback: Create a minimal config
+                var fallbackConfig = @"{
+  ""universes"": [
+    {
+      ""key"": ""example"",
+      ""name"": ""Example Timeline"",
+      ""items"": [
+        {
+          ""providerId"": ""1771"",
+          ""providerName"": ""tmdb"",
+          ""type"": ""movie""
+        }
+      ]
+    }
+  ]
+}";
+                System.IO.File.WriteAllText(configPath, fallbackConfig);
+                _logger.LogInformation("Created fallback configuration file");
+                return;
+            }
+            
+            // Copy embedded config to file system
+            using var reader = new System.IO.StreamReader(stream);
+            var configContent = reader.ReadToEnd();
+            System.IO.File.WriteAllText(configPath, configContent);
+            
+            _logger.LogInformation("Successfully created default configuration file with example timeline");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to create default configuration file. Users will need to create it manually.");
+        }
     }
 
     /// <inheritdoc />
