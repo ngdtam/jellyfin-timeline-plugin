@@ -86,9 +86,44 @@ You need the TMDB or IMDB ID for each movie/show:
 3. Go to **External IDs** tab
 4. Copy the TMDB or IMDB ID
 
-### Step 3: You're Done!
+### Step 3: Create Playlists
 
-The plugin will read your configuration file automatically. No need to run anything or click buttons.
+Once your configuration file is ready, create playlists using the API:
+
+**Using PowerShell (Windows):**
+```powershell
+# Login to get your user ID
+$login = Invoke-RestMethod -Uri "http://localhost:8096/Users/authenticatebyname" `
+  -Method Post `
+  -Body '{"Username":"admin","Pw":"yourpassword"}' `
+  -ContentType "application/json"
+
+$userId = $login.User.Id
+$token = $login.AccessToken
+
+# Create playlists
+Invoke-RestMethod -Uri "http://localhost:8096/Timeline/CreatePlaylists?userId=$userId" `
+  -Method Post `
+  -Headers @{"X-Emby-Token"=$token}
+```
+
+**Using curl (Linux/Mac):**
+```bash
+# Login to get your user ID
+curl -X POST "http://localhost:8096/Users/authenticatebyname" \
+  -H "Content-Type: application/json" \
+  -d '{"Username":"admin","Pw":"yourpassword"}'
+
+# Create playlists (replace USER_ID and TOKEN with values from login)
+curl -X POST "http://localhost:8096/Timeline/CreatePlaylists?userId=USER_ID" \
+  -H "X-Emby-Token: TOKEN"
+```
+
+The plugin will:
+- Read your configuration file
+- Find matching movies/shows in your library
+- Create playlists with items in chronological order
+- Report any missing items
 
 **Want more examples?** Check out [CONFIGURATION.md](CONFIGURATION.md) for ready-to-use configurations.
 

@@ -10,6 +10,14 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
+        "version": "0.5.0",
+        "changelog": "## v0.5.0 - Playlist Creation\n\n**⚠️ BETA VERSION - Not Production Ready**\n\n### ✨ New Features\n- **Automatic Playlist Creation** — Create Jellyfin playlists from your configuration\n- **POST /Timeline/CreatePlaylists** — New API endpoint to generate playlists\n- **User ID Support** — Pass userId as query parameter or via X-Emby-UserId header\n- **Direct IPlaylistManager Integration** — Uses internal Jellyfin API for reliable playlist creation\n\n### 🔧 Improvements\n- Playlists created with items in chronological order\n- Reports found vs missing items\n- Comprehensive logging for debugging\n- Handles existing playlists gracefully (skip with message)\n- File system based playlist detection\n\n### 📝 API Changes\n- New endpoint: `POST /Timeline/CreatePlaylists?userId={userId}`\n- Requires admin authentication\n- Returns detailed response with playlist results\n\n### 📚 Documentation\n- Updated README.md with playlist creation examples\n- Added PowerShell and curl examples\n- Included test script for validation\n\n### 🐛 Bug Fixes\n- Fixed FindExistingPlaylistAsync to work without user context\n- Resolved authentication issues with internal API calls\n- Improved error handling and reporting",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v0.5.0/jellyfin-timeline-manager-0.5.0.zip",
+        "checksum": "9AF163C9442003F6CEE5AFCDAAFBA4E4",
+        "timestamp": "2026-01-24T16:30:00Z"
+      },
+      {
         "version": "0.4.0",
         "changelog": "## v0.4.0 - Season Support\n\n**⚠️ BETA VERSION - Not Production Ready**\n\n### ✨ New Features\n- **Season Support** — Specify individual seasons for TV shows (e.g., Loki S1, Loki S2)\n- **Improved Validation** — Better display of TV series with season numbers\n- **TMDB Caching** — Faster validation with cached TMDB lookups\n\n### 🔧 Improvements\n- Increased HTTP timeout to 30 seconds for better reliability\n- Optimized concurrent requests (reduced to 3 for stability)\n- Added caching to prevent duplicate TMDB requests\n- Better handling of series with multiple seasons\n\n### 📝 Configuration Changes\n- New optional `season` property for episode items\n- Example: `{\"providerId\": \"84958\", \"providerName\": \"tmdb\", \"type\": \"episode\", \"season\": 1}`\n- See CONFIGURATION.md for complete examples\n\n### 📚 Documentation\n- Updated CONFIGURATION.md with season support examples\n- Added examples for separating seasons in chronological order",
         "targetAbi": "10.10.0.0",

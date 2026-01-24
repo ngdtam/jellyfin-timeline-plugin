@@ -46,12 +46,16 @@ GITHUB_*
 *.Tests/
 test/
 tests/
+test-*.ps1
+simple-test.ps1
+API_KEY_SETUP.md
 
 # Development documentation
 CHECKPOINT_*
 *_SUMMARY.md
 *_GUIDE.md
 *_INSTRUCTIONS.md
+DEVELOPMENT_LOG.md
 
 # Build artifacts
 release/

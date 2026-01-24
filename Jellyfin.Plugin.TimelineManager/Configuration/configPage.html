@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Universal Timeline Manager</title>
+</head>
+<body>
+    <div id="TimelineManagerConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-input,emby-button">
+        <div data-role="content">
+            <div class="content-primary">
+                <form id="TimelineManagerConfigForm">
+                    <div class="verticalSection">
+                        <h2>Universal Timeline Manager Configuration</h2>
+                        <p>Configure settings for the Timeline Manager plugin.</p>
+                    </div>
+
+                    <div class="verticalSection">
+                        <h3>Playlist Creation Settings</h3>
+                        <p>To enable automatic playlist creation with items, you need to provide a Jellyfin API key.</p>
+                        
+                        <div class="inputContainer">
+                            <label class="inputLabel inputLabelUnfocused" for="JellyfinApiKey">Jellyfin API Key:</label>
+                            <input is="emby-input" type="text" id="JellyfinApiKey" name="JellyfinApiKey" />
+                            <div class="fieldDescription">
+                                Create an API key in Jellyfin Dashboard → API Keys. This is required for adding items to playlists automatically.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button is="emby-button" type="submit" class="raised button-submit block">
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var TimelineManagerConfig = {
+                pluginId: "12345678-1234-5678-9abc-123456789012"
+            };
+
+            document.getElementById('TimelineManagerConfigPage').addEventListener('pageshow', function () {
+                Dashboard.showLoadingMsg();
+                ApiClient.getPluginConfiguration(TimelineManagerConfig.pluginId).then(function (config) {
+                    document.getElementById('JellyfinApiKey').value = config.JellyfinApiKey || '';
+                    Dashboard.hideLoadingMsg();
+                });
+            });
+
+            document.getElementById('TimelineManagerConfigForm').addEventListener('submit', function (e) {
+                e.preventDefault();
+                Dashboard.showLoadingMsg();
+
+                ApiClient.getPluginConfiguration(TimelineManagerConfig.pluginId).then(function (config) {
+                    config.JellyfinApiKey = document.getElementById('JellyfinApiKey').value;
+
+                    ApiClient.updatePluginConfiguration(TimelineManagerConfig.pluginId, config).then(function (result) {
+                        Dashboard.processPluginConfigurationUpdateResult(result);
+                    });
+                });
+
+                return false;
+            });
+        </script>
+    </div>
+</body>
+</html>

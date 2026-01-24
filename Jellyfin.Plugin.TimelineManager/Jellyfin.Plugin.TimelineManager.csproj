@@ -6,9 +6,9 @@
     <Nullable>enable</Nullable>
     
     <!-- Plugin Metadata -->
-    <AssemblyVersion>0.4.0.0</AssemblyVersion>
-    <FileVersion>0.4.0.0</FileVersion>
-    <InformationalVersion>0.4.0-beta</InformationalVersion>
+    <AssemblyVersion>0.5.0.0</AssemblyVersion>
+    <FileVersion>0.5.0.0</FileVersion>
+    <InformationalVersion>0.5.0-beta</InformationalVersion>
     <Product>Universal Timeline Manager</Product>
     <Title>Jellyfin Universal Timeline Manager Plugin</Title>
     <Authors>ngdtam</Authors>
@@ -56,6 +56,11 @@
   <!-- Include additional files in output -->
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+  <!-- Embed configuration page as resource -->
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\configPage.html" />
   </ItemGroup>
 
   <!-- Post-build events for deployment -->

@@ -12,5 +12,11 @@ public class PluginConfiguration : BasePluginConfiguration
     /// </summary>
     public PluginConfiguration()
     {
+        JellyfinApiKey = string.Empty;
     }
+
+    /// <summary>
+    /// Gets or sets the Jellyfin API key for playlist operations.
+    /// </summary>
+    public string JellyfinApiKey { get; set; }
 }

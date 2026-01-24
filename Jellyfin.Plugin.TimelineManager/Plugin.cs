@@ -12,7 +12,7 @@ namespace Jellyfin.Plugin.TimelineManager;
 /// The main plugin class for the Universal Timeline Manager.
 /// Handles plugin initialization, service registration, and dependency injection.
 /// </summary>
-public class Plugin : BasePlugin<PluginConfiguration>
+public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
 {
     private readonly ILogger<Plugin> _logger;
 
@@ -48,4 +48,17 @@ public class Plugin : BasePlugin<PluginConfiguration>
     /// Gets the current plugin instance.
     /// </summary>
     public static Plugin? Instance { get; private set; }
+
+    /// <inheritdoc />
+    public IEnumerable<PluginPageInfo> GetPages()
+    {
+        return new[]
+        {
+            new PluginPageInfo
+            {
+                Name = Name,
+                EmbeddedResourcePath = GetType().Namespace + ".Configuration.configPage.html"
+            }
+        };
+    }
 }
