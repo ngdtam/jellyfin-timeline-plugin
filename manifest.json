@@ -10,6 +10,14 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
+        "version": "0.4.0",
+        "changelog": "## v0.4.0 - Season Support\n\n**⚠️ BETA VERSION - Not Production Ready**\n\n### ✨ New Features\n- **Season Support** — Specify individual seasons for TV shows (e.g., Loki S1, Loki S2)\n- **Improved Validation** — Better display of TV series with season numbers\n- **TMDB Caching** — Faster validation with cached TMDB lookups\n\n### 🔧 Improvements\n- Increased HTTP timeout to 30 seconds for better reliability\n- Optimized concurrent requests (reduced to 3 for stability)\n- Added caching to prevent duplicate TMDB requests\n- Better handling of series with multiple seasons\n\n### 📝 Configuration Changes\n- New optional `season` property for episode items\n- Example: `{\"providerId\": \"84958\", \"providerName\": \"tmdb\", \"type\": \"episode\", \"season\": 1}`\n- See CONFIGURATION.md for complete examples\n\n### 📚 Documentation\n- Updated CONFIGURATION.md with season support examples\n- Added examples for separating seasons in chronological order",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v0.4.0/jellyfin-timeline-manager-v0.4.0.zip",
+        "checksum": "E51B35DF7F20A513C9FF8251C2E5E955",
+        "timestamp": "2026-01-23T12:00:00Z"
+      },
+      {
         "version": "0.3.0",
         "changelog": "## v0.3.0 - Beta Release\n\n**⚠️ BETA VERSION - Not Production Ready**\n\nThis is a beta release for testing purposes. Features may change.\n\n### ✨ Features\n- **REST API** — Validate and manage configurations via HTTP endpoints\n- **Library Validation** — API checks if configured items exist in your Jellyfin library\n- **JSON Configuration** — Simple file-based configuration\n- **Comprehensive Documentation** — See CONFIGURATION.md for complete guide\n\n### API Endpoints\n- `GET /Timeline/Test` — Test API connection\n- `GET /Timeline/Config` — Get current configuration\n- `POST /Timeline/Validate` — Validate configuration and check library\n- `POST /Timeline/Save` — Save configuration\n\n**Note:** This is API-only. No web UI. Configuration via JSON file editing.",
         "targetAbi": "10.10.0.0",

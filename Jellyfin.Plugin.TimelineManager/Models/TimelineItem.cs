@@ -30,6 +30,12 @@ public class TimelineItem
     public string Type { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the season number for TV series (optional, only for episodes).
+    /// </summary>
+    [JsonPropertyName("season")]
+    public int? Season { get; set; }
+
+    /// <summary>
     /// Gets the formatted provider key for lookup operations (e.g., "tmdb_1771").
     /// </summary>
     [JsonIgnore]

@@ -49,6 +49,7 @@ Here's the simplest possible configuration:
 - `providerId` — The ID number from TMDB or IMDB
 - `providerName` — Either `"tmdb"` or `"imdb"`
 - `type` — Either `"movie"` or `"episode"`
+- `season` — (Optional) Season number for TV shows (e.g., `1`, `2`, `3`)
 
 ## How to Find IDs
 
@@ -85,12 +86,15 @@ Copy and paste these, then modify for your library!
       "items": [
         {"providerId": "1771", "providerName": "tmdb", "type": "movie"},
         {"providerId": "10138", "providerName": "tmdb", "type": "movie"},
-        {"providerId": "1399", "providerName": "tmdb", "type": "episode"}
+        {"providerId": "84958", "providerName": "tmdb", "type": "episode", "season": 1},
+        {"providerId": "84958", "providerName": "tmdb", "type": "episode", "season": 2}
       ]
     }
   ]
 }
 ```
+
+**Note:** The example above shows how to include specific seasons of a TV show. Loki Season 1 and Season 2 are listed separately with `"season": 1` and `"season": 2`.
 
 ### Star Wars
 
@@ -134,6 +138,62 @@ Copy and paste these, then modify for your library!
 ```
 
 **Want more?** Check the `configurations/` folder in the GitHub repository for complete MCU, DCEU, and Star Wars configurations!
+
+## Season Support (New in v0.4.0)
+
+You can now specify individual seasons for TV shows! This is useful when different seasons appear at different points in the chronological timeline.
+
+### How to Use Seasons
+
+Add the `season` property to any episode item:
+
+```json
+{
+  "providerId": "84958",
+  "providerName": "tmdb",
+  "type": "episode",
+  "season": 1
+}
+```
+
+### Example: Separating Seasons
+
+```json
+{
+  "universes": [
+    {
+      "key": "mcu",
+      "name": "Marvel Cinematic Universe",
+      "items": [
+        {"providerId": "299534", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "84958", "providerName": "tmdb", "type": "episode", "season": 1},
+        {"providerId": "91363", "providerName": "tmdb", "type": "episode", "season": 1},
+        {"providerId": "533535", "providerName": "tmdb", "type": "movie"},
+        {"providerId": "84958", "providerName": "tmdb", "type": "episode", "season": 2},
+        {"providerId": "91363", "providerName": "tmdb", "type": "episode", "season": 2}
+      ]
+    }
+  ]
+}
+```
+
+In this example:
+- Avengers: Endgame (movie)
+- Loki Season 1 (episode with season 1)
+- What If...? Season 1 (episode with season 1)
+- Deadpool & Wolverine (movie)
+- Loki Season 2 (episode with season 2)
+- What If...? Season 2 (episode with season 2)
+
+### Without Season Number
+
+If you don't specify a season, the entire series will be included:
+
+```json
+{"providerId": "84958", "providerName": "tmdb", "type": "episode"}
+```
+
+This will include all seasons of the show.
 
 ## For Docker Users
 

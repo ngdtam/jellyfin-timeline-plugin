@@ -152,9 +152,12 @@ public class TimelineConfigController : ControllerBase
 
             // Create HTTP client for TMDB lookups
             using var httpClient = new System.Net.Http.HttpClient();
-            httpClient.Timeout = TimeSpan.FromSeconds(10); // 10 second timeout per TMDB request
+            httpClient.Timeout = TimeSpan.FromSeconds(30); // Increased to 30 seconds for reliability
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
             httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+
+            // Cache for TMDB titles to avoid duplicate requests
+            var tmdbCache = new System.Collections.Concurrent.ConcurrentDictionary<string, string>();
 
             // Collect all items first
             var allItems = new List<(Universe universe, TimelineItem item)>();
@@ -167,8 +170,8 @@ public class TimelineConfigController : ControllerBase
                 }
             }
 
-            // Limit concurrent TMDB requests to avoid rate limiting
-            var semaphore = new System.Threading.SemaphoreSlim(5, 5); // Max 5 concurrent requests
+            // Limit concurrent TMDB requests to avoid rate limiting (reduced to 3 for better reliability)
+            var semaphore = new System.Threading.SemaphoreSlim(3, 3);
 
             // Process items in parallel for better performance
             var tasks = allItems.Select(async tuple =>
@@ -185,11 +188,21 @@ public class TimelineConfigController : ControllerBase
                 }
                 else
                 {
-                    // Try to fetch the name from TMDB with rate limiting
+                    // Try to fetch the name from TMDB with rate limiting and caching
                     await semaphore.WaitAsync();
                     try
                     {
-                        var itemName = await FetchTmdbTitle(httpClient, item.ProviderId, item.ProviderName, item.Type);
+                        // Create cache key including season for unique identification
+                        var cacheKey = $"{item.ProviderName}:{item.ProviderId}:{item.Type}:{item.Season}";
+                        
+                        // Check cache first
+                        if (!tmdbCache.TryGetValue(cacheKey, out var itemName))
+                        {
+                            // Not in cache, fetch from TMDB
+                            itemName = await FetchTmdbTitle(httpClient, item.ProviderId, item.ProviderName, item.Type, item.Season);
+                            tmdbCache.TryAdd(cacheKey, itemName);
+                        }
+                        
                         return (found: false, message: $"[MISSING] {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}");
                     }
                     finally
@@ -342,8 +355,9 @@ public class TimelineConfigController : ControllerBase
     /// <param name="providerId">The TMDB ID.</param>
     /// <param name="providerName">The provider name (tmdb or imdb).</param>
     /// <param name="contentType">The content type (movie or episode).</param>
+    /// <param name="season">Optional season number for TV series.</param>
     /// <returns>The title of the item, or a fallback string if not found.</returns>
-    private async Task<string> FetchTmdbTitle(System.Net.Http.HttpClient httpClient, string providerId, string providerName, string contentType)
+    private async Task<string> FetchTmdbTitle(System.Net.Http.HttpClient httpClient, string providerId, string providerName, string contentType, int? season = null)
     {
         // Only support TMDB lookups for now
         if (providerName.ToLowerInvariant() != "tmdb")
@@ -383,10 +397,17 @@ public class TimelineConfigController : ControllerBase
                 // Remove any HTML entities
                 title = System.Net.WebUtility.HtmlDecode(title);
                 
-                // Add "(series)" suffix for TV shows to distinguish from movies
+                // Add season suffix for TV shows if season number is provided
                 if (contentType.ToLowerInvariant() == "episode")
                 {
-                    title = $"{title} (series)";
+                    if (season.HasValue)
+                    {
+                        title = $"{title} S{season.Value}";
+                    }
+                    else
+                    {
+                        title = $"{title} (series)";
+                    }
                 }
                 
                 return title;

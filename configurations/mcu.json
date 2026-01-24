@@ -40,17 +40,17 @@
           "type": "movie"
         },
         {
+          "providerId": "1724",
+          "providerName": "tmdb",
+          "type": "movie"
+        },
+        {
           "providerId": "76535",
           "providerName": "tmdb",
           "type": "movie"
         },
         {
           "providerId": "10195",
-          "providerName": "tmdb",
-          "type": "movie"
-        },
-        {
-          "providerId": "1724",
           "providerName": "tmdb",
           "type": "movie"
         },
@@ -68,11 +68,6 @@
           "providerId": "119569",
           "providerName": "tmdb",
           "type": "movie"
-        },
-        {
-          "providerId": "1403",
-          "providerName": "tmdb",
-          "type": "episode"
         },
         {
           "providerId": "76338",
@@ -100,24 +95,33 @@
           "type": "movie"
         },
         {
-          "providerId": "232125",
-          "providerName": "tmdb",
-          "type": "episode"
-        },
-        {
           "providerId": "283995",
           "providerName": "tmdb",
           "type": "movie"
         },
         {
+          "providerId": "232125",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 1
+        },
+        {
+          "providerId": "232125",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 2
+        },
+        {
           "providerId": "61889",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 1
         },
         {
           "providerId": "38472",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 1
         },
         {
           "providerId": "99861",
@@ -130,14 +134,22 @@
           "type": "movie"
         },
         {
+          "providerId": "61889",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 2
+        },
+        {
           "providerId": "62126",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 1
         },
         {
           "providerId": "62127",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 1
         },
         {
           "providerId": "62285",
@@ -160,11 +172,6 @@
           "type": "movie"
         },
         {
-          "providerId": "68716",
-          "providerName": "tmdb",
-          "type": "episode"
-        },
-        {
           "providerId": "315635",
           "providerName": "tmdb",
           "type": "movie"
@@ -172,7 +179,8 @@
         {
           "providerId": "67178",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 1
         },
         {
           "providerId": "284052",
@@ -180,24 +188,45 @@
           "type": "movie"
         },
         {
-          "providerId": "66190",
+          "providerId": "62126",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 2
         },
         {
-          "providerId": "69088",
+          "providerId": "38472",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 2
         },
         {
-          "providerId": "67466",
+          "providerId": "62127",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 2
+        },
+        {
+          "providerId": "61889",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 3
         },
         {
           "providerId": "284053",
           "providerName": "tmdb",
           "type": "movie"
+        },
+        {
+          "providerId": "67178",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 2
+        },
+        {
+          "providerId": "38472",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 3
         },
         {
           "providerId": "363088",
@@ -210,11 +239,6 @@
           "type": "movie"
         },
         {
-          "providerId": "88987",
-          "providerName": "tmdb",
-          "type": "episode"
-        },
-        {
           "providerId": "299534",
           "providerName": "tmdb",
           "type": "movie"
@@ -222,12 +246,14 @@
         {
           "providerId": "84958",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 1
         },
         {
           "providerId": "91363",
           "providerName": "tmdb",
-          "type": "episode"
+          "type": "episode",
+          "season": 1
         },
         {
           "providerId": "138505",
@@ -275,11 +301,6 @@
           "type": "episode"
         },
         {
-          "providerId": "92783",
-          "providerName": "tmdb",
-          "type": "episode"
-        },
-        {
           "providerId": "92749",
           "providerName": "tmdb",
           "type": "episode"
@@ -295,12 +316,12 @@
           "type": "episode"
         },
         {
-          "providerId": "92782",
+          "providerId": "92783",
           "providerName": "tmdb",
           "type": "episode"
         },
         {
-          "providerId": "114471",
+          "providerId": "92782",
           "providerName": "tmdb",
           "type": "episode"
         },
@@ -308,6 +329,11 @@
           "providerId": "616037",
           "providerName": "tmdb",
           "type": "movie"
+        },
+        {
+          "providerId": "114471",
+          "providerName": "tmdb",
+          "type": "episode"
         },
         {
           "providerId": "894205",
@@ -340,6 +366,18 @@
           "type": "movie"
         },
         {
+          "providerId": "84958",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 2
+        },
+        {
+          "providerId": "91363",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 2
+        },
+        {
           "providerId": "533535",
           "providerName": "tmdb",
           "type": "movie"
@@ -348,6 +386,12 @@
           "providerId": "138501",
           "providerName": "tmdb",
           "type": "episode"
+        },
+        {
+          "providerId": "91363",
+          "providerName": "tmdb",
+          "type": "episode",
+          "season": 3
         },
         {
           "providerId": "202555",
