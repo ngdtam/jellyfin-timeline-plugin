@@ -150,37 +150,67 @@ public class TimelineConfigController : ControllerBase
             var foundCount = 0;
             var totalCount = 0;
 
-            // Create HTTP client for TMDB API lookups
+            // Create HTTP client for TMDB lookups
             using var httpClient = new System.Net.Http.HttpClient();
+            httpClient.Timeout = TimeSpan.FromSeconds(10); // 10 second timeout per TMDB request
             httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36");
             httpClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
 
+            // Collect all items first
+            var allItems = new List<(Universe universe, TimelineItem item)>();
             foreach (var universe in config.Universes)
             {
                 foreach (var item in universe.Items)
                 {
+                    allItems.Add((universe, item));
                     totalCount++;
-                    var itemId = lookupService.FindItemByProviderId(item.ProviderId, item.ProviderName, item.Type);
-                    
-                    if (itemId.HasValue)
+                }
+            }
+
+            // Limit concurrent TMDB requests to avoid rate limiting
+            var semaphore = new System.Threading.SemaphoreSlim(5, 5); // Max 5 concurrent requests
+
+            // Process items in parallel for better performance
+            var tasks = allItems.Select(async tuple =>
+            {
+                var (universe, item) = tuple;
+                var itemId = lookupService.FindItemByProviderId(item.ProviderId, item.ProviderName, item.Type);
+                
+                if (itemId.HasValue)
+                {
+                    // Get the actual item to retrieve its name
+                    var jellyfinItem = _libraryManager.GetItemById(itemId.Value);
+                    var itemName = jellyfinItem?.Name ?? "Unknown";
+                    return (found: true, message: $"[FOUND] {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}");
+                }
+                else
+                {
+                    // Try to fetch the name from TMDB with rate limiting
+                    await semaphore.WaitAsync();
+                    try
                     {
-                        foundCount++;
-                        // Get the actual item to retrieve its name
-                        var jellyfinItem = _libraryManager.GetItemById(itemId.Value);
-                        var itemName = jellyfinItem?.Name ?? "Unknown";
-                        var foundMsg = $"[FOUND] {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}";
-                        foundItems.Add(foundMsg);
-                        _logger.LogDebug("Found {Type} with {Provider}:{ProviderId} in library", 
-                            item.Type, item.ProviderName, item.ProviderId);
-                    }
-                    else
-                    {
-                        // Try to fetch the name from TMDB
                         var itemName = await FetchTmdbTitle(httpClient, item.ProviderId, item.ProviderName, item.Type);
-                        var errorMsg = $"[MISSING] {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}";
-                        contentErrors.Add(errorMsg);
-                        _logger.LogWarning(errorMsg);
+                        return (found: false, message: $"[MISSING] {universe.Name}: {itemName} ({item.Type}) - {item.ProviderName}:{item.ProviderId}");
                     }
+                    finally
+                    {
+                        semaphore.Release();
+                    }
+                }
+            });
+
+            var results = await Task.WhenAll(tasks);
+
+            foreach (var result in results)
+            {
+                if (result.found)
+                {
+                    foundCount++;
+                    foundItems.Add(result.message);
+                }
+                else
+                {
+                    contentErrors.Add(result.message);
                 }
             }
 

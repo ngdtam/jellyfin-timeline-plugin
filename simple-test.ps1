@@ -97,9 +97,9 @@ try {
     $requestBody = "{`"jsonContent`":`"$escapedJson`"}"
     
     Write-Host "  Request body size: $($requestBody.Length) characters" -ForegroundColor Gray
-    Write-Host "  Sending validation request..." -ForegroundColor Gray
+    Write-Host "  Sending validation request (timeout: 120 seconds)..." -ForegroundColor Gray
     
-    $validateResult = Invoke-RestMethod -Uri "$Server/Timeline/Validate" -Method Post -Body $requestBody -ContentType "application/json; charset=utf-8" -Headers $headers -TimeoutSec 60
+    $validateResult = Invoke-RestMethod -Uri "$Server/Timeline/Validate" -Method Post -Body $requestBody -ContentType "application/json; charset=utf-8" -Headers $headers -TimeoutSec 120
     
     Write-Host ""
     if ($validateResult.isValid) {
