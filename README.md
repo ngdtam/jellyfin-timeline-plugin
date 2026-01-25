@@ -6,8 +6,11 @@ A Jellyfin plugin that creates playlists for cinematic universes (Marvel, DC, St
 
 ## Features
 
-- Create chronological playlists from any movie/TV universe
-- Web UI for easy playlist management
+- **Visual Playlist Creator** - Build playlists with search and drag-and-drop (no JSON editing required)
+- **TMDB Integration** - Search for movies and TV shows not in your library
+- **Multi-Universe Management** - Manage multiple universe configurations with Web UI
+- **Flexible Search** - Toggle between Jellyfin library and TMDB sources
+- **Automatic Migration** - Seamlessly upgrades from single-file to multi-file format
 - Support for both movies and TV show seasons
 - Works with TMDB and IMDB IDs
 
@@ -30,38 +33,75 @@ A Jellyfin plugin that creates playlists for cinematic universes (Marvel, DC, St
 
 ## Quick Start
 
-1. **Create configuration file** at `/config/timeline_manager_config.json`:
+### Option 1: Visual Playlist Creator (Easiest)
 
+1. **Configure TMDB API Key** (optional, for searching movies not in your library):
+   - Get a free API key from [TMDB](https://www.themoviedb.org/settings/api)
+   - Open: Dashboard → Plugins → Universal Timeline Manager → **Tab 1: Universe Management**
+   - Enter your API key in **TMDB Settings** section and click **Save**
+
+2. **Create a Playlist Visually**:
+   - Go to **Tab 2: Playlist Creator**
+   - Enter playlist key (e.g., `mcu`) and name (e.g., `Marvel Cinematic Universe`)
+   - Search for movies/shows using the search bar
+   - Click items to add them to your playlist
+   - Click **Save Playlist** to create the universe file
+   - Click **Create Jellyfin Playlist** to generate the actual playlist
+
+3. **View playlists**: Libraries → Playlists
+
+### Option 2: Manual JSON Configuration
+
+1. **Create universe files** in `/config/universes/`:
+
+**File:** `/config/universes/mcu.json`
 ```json
 {
-  "universes": [
-    {
-      "key": "mcu",
-      "name": "Marvel Cinematic Universe",
-      "items": [
-        {"providerId": "1771", "providerName": "tmdb", "type": "movie"},
-        {"providerId": "1726", "providerName": "tmdb", "type": "movie"}
-      ]
-    }
+  "key": "mcu",
+  "name": "Marvel Cinematic Universe",
+  "items": [
+    {"providerId": "1771", "providerName": "tmdb", "type": "movie"},
+    {"providerId": "1726", "providerName": "tmdb", "type": "movie"}
   ]
 }
 ```
 
 2. **Open plugin page**: Dashboard → Plugins → Universal Timeline Manager
 
-3. **Click "Create Playlists"** button
+3. **Select universes** and click **Create Playlists for Selected Universes**
 
 4. **View playlists**: Libraries → Playlists
 
 ## Finding Movie/Show IDs
 
-**From TMDB:**
+**Option 1: Use the Visual Playlist Creator**
+- The plugin's search feature automatically finds IDs for you
+- Just search and click to add items
+
+**Option 2: From TMDB**
 - Go to [themoviedb.org](https://www.themoviedb.org)
 - Search for your movie/show
 - Get ID from URL: `themoviedb.org/movie/1771` → ID is `1771`
 
-**From Jellyfin:**
+**Option 3: From Jellyfin**
 - Right-click movie/show → Edit Metadata → External IDs tab
+
+## Web UI Features
+
+The plugin provides a modern two-tab interface:
+
+### Tab 1: Universe Management
+- **Universe Manager** - View, edit, and delete universe JSON files
+- **Create Playlists** - Generate Jellyfin playlists from selected universes
+- **Manage Playlists** - View and delete existing playlists
+- **TMDB Settings** - Configure your TMDB API key for external search
+
+### Tab 2: Playlist Creator
+- **Visual Builder** - Create playlists without editing JSON
+- **Search Toggle** - Switch between Jellyfin Library and TMDB sources
+- **Drag & Drop** - Reorder items in your playlist
+- **Live Preview** - See your playlist as you build it
+- **One-Click Save** - Save to JSON and create Jellyfin playlist
 
 ## Configuration Examples
 
@@ -79,11 +119,33 @@ Check the `configurations/` folder for ready-to-use examples:
 ## Requirements
 
 - Jellyfin Server 10.10.0 or newer
+- (Optional) TMDB API key for searching external content - Get one free at [TMDB](https://www.themoviedb.org/settings/api)
+
+## Changelog
+
+### v0.7.5 (Latest)
+- Added TMDB API search integration
+- Visual Playlist Creator with search functionality
+- User-configurable TMDB API key
+- Two-tab UI reorganization
+- Search toggle between Jellyfin and TMDB sources
+
+### v0.7.0
+- Visual playlist creator (no JSON editing required)
+- Content search by title
+- Add/remove/reorder playlist items in UI
+
+### v0.6.0
+- Multi-universe configuration system
+- Web UI for universe management
+- Automatic migration from single-file format
+- Selective playlist creation
 
 ## Support
 
 - **Issues:** [GitHub Issues](https://github.com/ngdtam/jellyfin-timeline-plugin/issues)
 - **Examples:** Check `configurations/` folder
+- **Documentation:** See HOW_TO_USE.md and CONFIGURATION.md
 
 ## License
 
