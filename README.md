@@ -105,14 +105,30 @@ The plugin provides a modern two-tab interface:
 
 ## Updating Playlists
 
+### Automatic Updates (v0.8.0+)
+
+The plugin includes a scheduled task that automatically updates playlists:
+
+1. Go to Dashboard → Scheduled Tasks
+2. Find "Update Timeline Playlists" under "Universal Timeline Manager"
+3. Configure schedule (default: Daily at 3:00 AM)
+4. Enable/disable as needed
+5. Click "Run Now" to trigger manually
+
+The task will:
+- Process all universe files in /config/universes/
+- Recreate playlists with current library content
+- Log detailed information about updates
+- Continue even if some universes fail
+
+### Manual Updates
+
 When you add new movies/shows to your Jellyfin library:
 
 1. Go to Dashboard → Plugins → Universal Timeline Manager
 2. Select the universes you want to update
 3. Click **Create Playlists for Selected Universes**
 4. The plugin will recreate the playlists with any newly available content
-
-Note: Scheduled automatic updates are planned for a future release.
 
 ## Configuration Examples
 
@@ -134,7 +150,14 @@ Check the `configurations/` folder for ready-to-use examples:
 
 ## Changelog
 
-### v0.7.5 (Latest)
+### v0.8.0 (Latest)
+- Scheduled task for automatic playlist updates
+- Appears in Dashboard > Scheduled Tasks
+- Default schedule: Daily at 3:00 AM (customizable)
+- Manual trigger and cancellation support
+- Progress reporting and detailed logging
+
+### v0.7.5
 - Added TMDB API search integration
 - Visual Playlist Creator with search functionality
 - User-configurable TMDB API key
@@ -156,10 +179,10 @@ Check the `configurations/` folder for ready-to-use examples:
 
 Planned features for future releases:
 
-- **Scheduled Tasks** - Automatic playlist updates on a schedule
-- **Auto-Refresh** - Detect new library content and update playlists automatically
+- **Auto-Refresh on Library Changes** - Detect new library content and update playlists automatically
 - **Playlist Templates** - Pre-configured universe templates for popular franchises
 - **Advanced Filtering** - Filter by genre, rating, release year, etc.
+- **Playlist Statistics** - View analytics about your timeline playlists
 
 ## Support
 
