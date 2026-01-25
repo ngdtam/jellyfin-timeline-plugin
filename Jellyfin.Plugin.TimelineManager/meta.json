@@ -8,6 +8,14 @@
   "imageUrl": "",
   "versions": [
     {
+      "version": "0.5.2.0",
+      "changelog": "Added playlist management UI with delete functionality and enhanced button feedback.",
+      "targetAbi": "10.11.6.0",
+      "sourceUrl": "",
+      "checksum": "",
+      "timestamp": "2025-01-24T00:00:00Z"
+    },
+    {
       "version": "1.0.0.0",
       "changelog": "Initial release with support for multiple universes, mixed content types, Provider_ID matching, and comprehensive error handling.",
       "targetAbi": "10.11.6.0",

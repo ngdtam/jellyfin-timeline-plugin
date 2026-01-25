@@ -10,6 +10,14 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
+        "version": "0.5.2",
+        "changelog": "## v0.5.2 - Web UI & Code Cleanup\n\n### ✨ New Features\n- **Web UI Enhancements** — Clean configuration page with playlist management\n- **Playlist Management** — View and delete playlists directly from web UI\n- **Real-time Feedback** — Button shows creating state with success/error messages\n- **Auto-refresh** — Playlist list automatically refreshes after creation\n\n### 🧹 Code Cleanup\n- **Removed Python Dependencies** — No longer requires Python or external scripts\n- **Removed 46+ Redundant Files** — Cleaned up test scripts, debug files, old docs\n- **Simplified API** — Removed unused endpoints (ValidateApiKey, CheckPythonAvailability, ExecutePlaylistScript)\n- **Streamlined Services** — Removed PlaylistScriptExecutor and Python integration\n\n### 🐛 Bug Fixes\n- Fixed JavaScript loading issue (moved script tag inside content container)\n- Fixed userId parameter requirement for CreatePlaylists endpoint\n- Removed test messages from playlist container\n\n### 📊 Statistics\n- 30% smaller codebase\n- DLL size: 159 KB\n- Pure C# implementation (no Python)\n\n**Coming in v0.6.0:** Multi-universe system with JSON editor in web UI",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v0.5.2/jellyfin-timeline-manager-0.5.2.zip",
+        "checksum": "TBD",
+        "timestamp": "2026-01-25T00:00:00Z"
+      },
+      {
         "version": "0.5.1",
         "changelog": "## v0.5.1 - Auto-Configuration\n\n**⚠️ BETA VERSION - Not Production Ready**\n\n### ✨ New Features\n- **Auto-Create Configuration File** — Default config file created automatically on first install\n- **Embedded Template** — Example timeline included with 3 MCU movies\n- **Simplified Setup** — No manual file creation needed\n\n### 🔧 Improvements\n- Removed unused API key field (we use internal API now)\n- Simplified configuration page with documentation links\n- Better first-time user experience\n- Configuration file appears at /config/timeline_manager_config.json automatically\n\n### 📝 Changes\n- Removed JellyfinApiKey from PluginConfiguration (not needed)\n- Updated config page to show documentation instead of settings\n- Plugin creates default config on initialization if missing\n\n### 📚 Documentation\n- Config page now shows file location and API endpoints\n- Links to GitHub repository for full documentation",
         "targetAbi": "10.10.0.0",

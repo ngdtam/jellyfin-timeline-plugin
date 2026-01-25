@@ -27,6 +27,9 @@ build-output-*/
 Thumbs.db
 
 # === DEVELOPMENT FILES - KEEP LOCAL ONLY ===
+# Reference code
+reference-*/
+
 # Specs and analysis
 .kiro/
 *ANALYSIS*
@@ -40,6 +43,7 @@ FINAL_*
 PLUGIN_*
 DISTRIBUTION_*
 GITHUB_*
+ROADMAP_*
 
 # Test files
 *Tests/

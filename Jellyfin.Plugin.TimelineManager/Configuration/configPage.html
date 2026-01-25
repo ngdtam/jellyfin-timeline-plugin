@@ -1,48 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universal Timeline Manager</title>
 </head>
+
 <body>
-    <div id="TimelineManagerConfigPage" data-role="page" class="page type-interior pluginConfigurationPage">
+    <div data-role="page" class="page type-interior pluginConfigurationPage">
         <div data-role="content">
             <div class="content-primary">
+                <div style="display: flex; align-items: center; margin-bottom: 1em;">
+                    <h1>Universal Timeline Manager</h1>
+                    <a class="emby-button raised button-alt headerHelpButton"
+                        href="https://github.com/ngdtam/jellyfin-timeline-plugin" target="_blank"
+                        rel="noopener noreferrer" style="padding: 0.4em 0.8em; margin-left: 1em;">Help</a>
+                </div>
+
+                <p style="margin-bottom: 1.5em;">Create chronological playlists for cinematic universes based on your JSON configuration file.</p>
+
+                <form style="margin: 0;">
+                    <!-- Notification area -->
+                </form>
+
                 <div class="verticalSection">
-                    <h2>Universal Timeline Manager</h2>
-                    <p>This plugin creates chronological playlists for cinematic universes based on your JSON configuration file.</p>
+                    <h2 class="sectionTitle">Create Playlists</h2>
+                    
+                    <div class="inputContainer" style="margin-bottom: 1em;">
+                        <div class="fieldDescription" style="margin-bottom: 1em;">
+                            Click the button below to create playlists from your timeline configuration.
+                        </div>
+                        
+                        <button type="button" is="emby-button" id="createPlaylistsBtn" class="emby-button raised block">
+                            Create Playlists
+                        </button>
+                    </div>
+
+                    <div id="statusMessage" style="margin-top: 1em; padding: 1em; border-radius: 4px; display: none;"></div>
+                    <div id="outputBox" style="background: #0a0a0a; color: #00ff00; padding: 1em; border-radius: 4px; font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; margin-top: 1em; display: none;"></div>
+                    <div id="errorBox" style="background: #2a0000; color: #ff6b6b; padding: 1em; border-radius: 4px; font-family: monospace; white-space: pre-wrap; margin-top: 1em; display: none;"></div>
                 </div>
 
                 <div class="verticalSection">
-                    <h3>Configuration File</h3>
-                    <p><strong>Location:</strong> <code>/config/timeline_manager_config.json</code></p>
-                    <p>A default configuration file has been created automatically on first install with an example timeline.</p>
-                    <p>Edit this file to add your own universes and items.</p>
+                    <h2 class="sectionTitle">Manage Playlists</h2>
+                    
+                    <div class="inputContainer" style="margin-bottom: 1em;">
+                        <div class="fieldDescription" style="margin-bottom: 1em;">
+                            View and manage playlists created by this plugin.
+                        </div>
+                        
+                        <button type="button" is="emby-button" id="refreshPlaylistsBtn" class="emby-button raised block" style="margin-bottom: 1em;">
+                            Refresh Playlist List
+                        </button>
+                        
+                        <div id="playlistsContainer" style="margin-top: 1em;"></div>
+                    </div>
                 </div>
 
                 <div class="verticalSection">
-                    <h3>Creating Playlists</h3>
-                    <p>Use the API endpoint to create playlists from your configuration:</p>
-                    <pre><code>POST /Timeline/CreatePlaylists?userId=YOUR_USER_ID</code></pre>
-                    <p>See the plugin README for detailed instructions and examples.</p>
+                    <h2 class="sectionTitle">Configuration File</h2>
+                    <div class="inputContainer">
+                        <div class="fieldDescription">
+                            <strong>Location:</strong> <code>/config/timeline_manager_config.json</code>
+                        </div>
+                        <div class="fieldDescription" style="margin-top: 0.5em;">
+                            A default configuration file has been created automatically on first install with an example timeline.
+                            Edit this file to add your own universes and items.
+                        </div>
+                    </div>
                 </div>
 
                 <div class="verticalSection">
-                    <h3>API Endpoints</h3>
-                    <ul>
-                        <li><code>GET /Timeline/Test</code> - Test if plugin is working</li>
-                        <li><code>GET /Timeline/Config</code> - Get current configuration</li>
-                        <li><code>POST /Timeline/Validate</code> - Validate configuration</li>
-                        <li><code>POST /Timeline/CreatePlaylists</code> - Create playlists</li>
-                    </ul>
+                    <h2 class="sectionTitle">Documentation</h2>
+                    <div class="inputContainer">
+                        <div class="fieldDescription">
+                            For complete documentation, visit:
+                            <a href="https://github.com/ngdtam/jellyfin-timeline-plugin" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="verticalSection">
-                    <h3>Documentation</h3>
-                    <p>For complete documentation, visit:</p>
-                    <p><a href="https://github.com/ngdtam/jellyfin-timeline-plugin" target="_blank">GitHub Repository</a></p>
-                </div>
+                <script src="configurationpage?name=configPage.js"></script>
             </div>
         </div>
     </div>

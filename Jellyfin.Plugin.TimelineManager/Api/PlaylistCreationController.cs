@@ -85,17 +85,26 @@ public class PlaylistCreationController : ControllerBase
             var config = Plugin.Instance?.Configuration as PluginConfiguration;
             _logger.LogDebug("[Timeline API] Plugin configuration loaded");
 
+            // Extract authentication token from request
+            string? authToken = null;
+            if (Request.Headers.TryGetValue("X-Emby-Token", out var tokenHeader))
+            {
+                authToken = tokenHeader.FirstOrDefault();
+                _logger.LogDebug("[Timeline API] Extracted auth token from request");
+            }
+
             // Create logger for the service
             var serviceLogger = LoggerFactory.Create(builder => builder.AddConsole())
                 .CreateLogger<PlaylistCreationService>();
 
-            // Create the playlist creation service with user ID
-            _logger.LogInformation("[Timeline API] Creating PlaylistCreationService with user ID...");
+            // Create the playlist creation service with user ID and auth token
+            _logger.LogInformation("[Timeline API] Creating PlaylistCreationService with user ID and auth token...");
             var service = new PlaylistCreationService(
                 serviceLogger,
                 _playlistManager,
                 _libraryManager,
-                userId: effectiveUserId);
+                userId: effectiveUserId,
+                authToken: authToken);
 
             // Execute playlist creation
             _logger.LogInformation("[Timeline API] Executing CreatePlaylistsAsync...");
