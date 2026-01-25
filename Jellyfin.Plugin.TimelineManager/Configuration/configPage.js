@@ -87,7 +87,7 @@ function loadPlaylists() {
         playlistsContainer.innerHTML = '<div class="fieldDescription">Loading playlists...</div>';
         
         // Get all playlists for the user
-        fetch('/Users/' + userId + '/Items?IncludeItemTypes=Playlist&Recursive=true&Fields=DateCreated,ChildCount', {
+        fetch(ApiClient.getUrl('/Users/' + userId + '/Items?IncludeItemTypes=Playlist&Recursive=true&Fields=DateCreated,ChildCount'), {
             headers: {
                 'X-Emby-Token': apiKey
             }
@@ -173,7 +173,7 @@ function deletePlaylist(playlistId, playlistName) {
     try {
         var apiKey = ApiClient.accessToken();
         
-        fetch('/Items/' + playlistId, {
+        fetch(ApiClient.getUrl('/Items/' + playlistId), {
             method: 'DELETE',
             headers: {
                 'X-Emby-Token': apiKey
@@ -238,7 +238,7 @@ function createPlaylists() {
         console.log('Creating playlists for user:', userId);
         
         // Call the CreatePlaylists API endpoint with userId query parameter
-        fetch('/Timeline/CreatePlaylists?userId=' + userId, {
+        fetch(ApiClient.getUrl('/Timeline/CreatePlaylists?userId=' + userId), {
             method: 'POST',
             headers: {
                 'X-Emby-Token': apiKey,
@@ -363,7 +363,7 @@ function loadUniverses() {
         universeList.innerHTML = '<div class="fieldDescription">Loading universes...</div>';
         
         // Get all universes
-        fetch('/Timeline/Universes', {
+        fetch(ApiClient.getUrl('/Timeline/Universes'), {
             headers: {
                 'X-Emby-Token': apiKey
             }
@@ -485,7 +485,7 @@ function openEditor(filename) {
     
     var apiKey = ApiClient.accessToken();
     
-    fetch('/Timeline/Universes/' + filename, {
+    fetch(ApiClient.getUrl('/Timeline/Universes/' + filename), {
         headers: {
             'X-Emby-Token': apiKey
         }
@@ -556,7 +556,7 @@ function saveUniverse() {
     
     var apiKey = ApiClient.accessToken();
     
-    fetch('/Timeline/Universes/' + currentEditingUniverse, {
+    fetch(ApiClient.getUrl('/Timeline/Universes/' + currentEditingUniverse), {
         method: 'POST',
         headers: {
             'X-Emby-Token': apiKey,
@@ -605,7 +605,7 @@ function deleteUniverse(filename, universeName) {
     try {
         var apiKey = ApiClient.accessToken();
         
-        fetch('/Timeline/Universes/' + filename, {
+        fetch(ApiClient.getUrl('/Timeline/Universes/' + filename), {
             method: 'DELETE',
             headers: {
                 'X-Emby-Token': apiKey
@@ -696,7 +696,7 @@ function createPlaylistsForSelected() {
         
         console.log('Creating playlists with request:', requestBody);
         
-        fetch('/Timeline/CreatePlaylists?userId=' + userId, {
+        fetch(ApiClient.getUrl('/Timeline/CreatePlaylists?userId=' + userId), {
             method: 'POST',
             headers: {
                 'X-Emby-Token': apiKey,
@@ -861,7 +861,7 @@ function setSearchSource(source) {
 function searchTmdbMovies(query, limit) {
     var apiKey = ApiClient.accessToken();
     
-    return fetch('/Timeline/Search/Tmdb/Movies?query=' + encodeURIComponent(query) + '&limit=' + limit, {
+    return fetch(ApiClient.getUrl('/Timeline/Search/Tmdb/Movies?query=' + encodeURIComponent(query) + '&limit=' + limit), {
         headers: {
             'X-Emby-Token': apiKey
         }
@@ -881,7 +881,7 @@ function searchTmdbMovies(query, limit) {
 function searchTmdbTvShows(query, limit) {
     var apiKey = ApiClient.accessToken();
     
-    return fetch('/Timeline/Search/Tmdb/Tv?query=' + encodeURIComponent(query) + '&limit=' + limit, {
+    return fetch(ApiClient.getUrl('/Timeline/Search/Tmdb/Tv?query=' + encodeURIComponent(query) + '&limit=' + limit), {
         headers: {
             'X-Emby-Token': apiKey
         }
@@ -998,7 +998,7 @@ function performSearch() {
         } else {
             // Search Jellyfin Library
             var apiKey = ApiClient.accessToken();
-            searchPromise = fetch('/Timeline/Search?query=' + encodeURIComponent(query) + '&limit=10', {
+            searchPromise = fetch(ApiClient.getUrl('/Timeline/Search?query=' + encodeURIComponent(query) + '&limit=10'), {
                 headers: {
                     'X-Emby-Token': apiKey
                 }
@@ -1425,7 +1425,7 @@ function savePlaylist() {
     var filename = PlaylistCreatorUI.isEditing ? PlaylistCreatorUI.originalFilename : (key + '.json');
     var apiKey = ApiClient.accessToken();
     
-    fetch('/Timeline/Universes/' + filename, {
+    fetch(ApiClient.getUrl('/Timeline/Universes/' + filename), {
         method: 'POST',
         headers: {
             'X-Emby-Token': apiKey,
@@ -1486,7 +1486,7 @@ function createJellyfinPlaylist() {
         selectedUniverseFilenames: [filename]
     };
     
-    fetch('/Timeline/CreatePlaylists?userId=' + userId, {
+    fetch(ApiClient.getUrl('/Timeline/CreatePlaylists?userId=' + userId), {
         method: 'POST',
         headers: {
             'X-Emby-Token': apiKey,
@@ -1539,7 +1539,7 @@ function cancelPlaylistCreation() {
 function loadPlaylistForEditing(filename) {
     var apiKey = ApiClient.accessToken();
     
-    fetch('/Timeline/Universes/' + filename, {
+    fetch(ApiClient.getUrl('/Timeline/Universes/' + filename), {
         headers: {
             'X-Emby-Token': apiKey
         }
