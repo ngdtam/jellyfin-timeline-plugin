@@ -36,7 +36,6 @@ reference-*/
 *TROUBLESHOOTING*
 *SUMMARY*
 *INSTRUCTIONS*
-*GUIDE*
 CREATE_*
 RELEASE_*
 FINAL_*
@@ -54,12 +53,15 @@ test-*.ps1
 simple-test.ps1
 API_KEY_SETUP.md
 
-# Development documentation
+# Development documentation (but keep essential guides)
 CHECKPOINT_*
 *_SUMMARY.md
-*_GUIDE.md
 *_INSTRUCTIONS.md
 DEVELOPMENT_LOG.md
+# Exclude development guides but keep essential ones
+*_GUIDE.md
+!DEPLOYMENT_GUIDE.md
+!CONFIGURATION_GUIDE.md
 
 # Build artifacts
 release/

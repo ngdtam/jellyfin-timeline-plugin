@@ -41,7 +41,16 @@ Your files stay where they are. The plugin just creates playlists showing the co
 
 ## How to Use
 
-### Step 1: Create Your Configuration File
+### Step 1: Access the Web UI
+
+1. Open Jellyfin Dashboard
+2. Go to **Plugins** → **Universal Timeline Manager**
+3. You'll see the configuration page with:
+   - **Create Playlists** button
+   - **Manage Playlists** section (view and delete)
+   - Configuration file location
+
+### Step 2: Create Your Configuration File
 
 You need to create a file that tells the plugin which movies/shows to include. This file goes in your Jellyfin config folder.
 
@@ -70,7 +79,7 @@ You need to create a file that tells the plugin which movies/shows to include. T
 - `providerName` — Either `"tmdb"` or `"imdb"`
 - `type` — Either `"movie"` or `"episode"`
 
-### Step 2: Find Movie/Show IDs
+### Step 3: Find Movie/Show IDs
 
 You need the TMDB or IMDB ID for each movie/show:
 
@@ -86,9 +95,18 @@ You need the TMDB or IMDB ID for each movie/show:
 3. Go to **External IDs** tab
 4. Copy the TMDB or IMDB ID
 
-### Step 3: Create Playlists
+### Step 4: Create Playlists
 
-Once your configuration file is ready, create playlists using the API:
+Once your configuration file is ready, use the Web UI:
+
+1. Go to **Dashboard** → **Plugins** → **Universal Timeline Manager**
+2. Click the **Create Playlists** button
+3. Wait for the success message
+4. View your playlists in the **Manage Playlists** section
+
+**Alternative: Using API directly**
+
+You can also create playlists using the API:
 
 **Using PowerShell (Windows):**
 ```powershell
