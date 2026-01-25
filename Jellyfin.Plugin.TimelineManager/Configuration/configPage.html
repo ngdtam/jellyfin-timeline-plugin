@@ -23,6 +23,61 @@
                 </form>
 
                 <div class="verticalSection">
+                    <h2 class="sectionTitle">Playlist Creator</h2>
+                    
+                    <div class="inputContainer" style="margin-bottom: 1em;">
+                        <div class="fieldDescription" style="margin-bottom: 1em;">
+                            Create and edit playlists visually without writing JSON. Search for content, arrange items in your preferred order, and save as universe files.
+                        </div>
+                        
+                        <button type="button" is="emby-button" id="createNewPlaylistBtn" class="emby-button raised">
+                            Create New Playlist
+                        </button>
+                    </div>
+                    
+                    <div id="playlistCreatorForm" style="display: none;">
+                        <div class="inputContainer" style="margin-bottom: 1em;">
+                            <label class="inputLabel" for="playlistKey">Playlist Key (unique identifier, no spaces):</label>
+                            <input type="text" id="playlistKey" class="emby-input" placeholder="e.g., my-playlist" />
+                            <div id="keyValidationError" class="fieldDescription" style="color: #ff6b6b; display: none; margin-top: 0.5em;"></div>
+                        </div>
+                        
+                        <div class="inputContainer" style="margin-bottom: 1em;">
+                            <label class="inputLabel" for="playlistName">Playlist Name:</label>
+                            <input type="text" id="playlistName" class="emby-input" placeholder="e.g., My Custom Playlist" />
+                            <div id="nameValidationError" class="fieldDescription" style="color: #ff6b6b; display: none; margin-top: 0.5em;"></div>
+                        </div>
+                        
+                        <div class="inputContainer" style="margin-bottom: 1em;">
+                            <label class="inputLabel" for="contentSearchInput">Search for Movies/Episodes:</label>
+                            <input type="text" id="contentSearchInput" class="emby-input" placeholder="Type to search..." />
+                            <div id="searchResults" style="margin-top: 0.5em; display: none;"></div>
+                        </div>
+                        
+                        <div class="inputContainer" style="margin-bottom: 1em;">
+                            <label class="inputLabel">Playlist Items:</label>
+                            <div id="playlistItemsList" style="border: 1px solid #333; border-radius: 4px; padding: 1em; min-height: 100px;">
+                                <div id="emptyStateMessage" class="fieldDescription">No items added yet. Search and select content above to add items.</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 0.5em; margin-top: 1em;">
+                            <button type="button" is="emby-button" id="savePlaylistBtn" class="emby-button raised">
+                                Save Playlist
+                            </button>
+                            <button type="button" is="emby-button" id="createJellyfinPlaylistBtn" class="emby-button raised" disabled>
+                                Create Jellyfin Playlist
+                            </button>
+                            <button type="button" is="emby-button" id="cancelPlaylistBtn" class="emby-button raised">
+                                Cancel
+                            </button>
+                        </div>
+                        
+                        <div id="playlistStatusMessage" style="margin-top: 1em; padding: 1em; border-radius: 4px; display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="verticalSection">
                     <h2 class="sectionTitle">Universe Manager</h2>
                     
                     <div class="inputContainer" style="margin-bottom: 1em;">

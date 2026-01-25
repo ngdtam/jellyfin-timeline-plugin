@@ -26,5 +26,8 @@ public sealed class ServiceRegistrator : IPluginServiceRegistrator
         
         // Register ConfigurationService as singleton
         serviceCollection.AddSingleton<ConfigurationService>();
+        
+        // Register ContentSearchService as singleton
+        serviceCollection.AddSingleton<ContentSearchService>();
     }
 }
