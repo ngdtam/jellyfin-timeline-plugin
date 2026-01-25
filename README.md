@@ -103,6 +103,17 @@ The plugin provides a modern two-tab interface:
 - **Live Preview** - See your playlist as you build it
 - **One-Click Save** - Save to JSON and create Jellyfin playlist
 
+## Updating Playlists
+
+When you add new movies/shows to your Jellyfin library:
+
+1. Go to Dashboard → Plugins → Universal Timeline Manager
+2. Select the universes you want to update
+3. Click **Create Playlists for Selected Universes**
+4. The plugin will recreate the playlists with any newly available content
+
+Note: Scheduled automatic updates are planned for a future release.
+
 ## Configuration Examples
 
 Check the `configurations/` folder for ready-to-use examples:
@@ -140,6 +151,15 @@ Check the `configurations/` folder for ready-to-use examples:
 - Web UI for universe management
 - Automatic migration from single-file format
 - Selective playlist creation
+
+## Roadmap
+
+Planned features for future releases:
+
+- **Scheduled Tasks** - Automatic playlist updates on a schedule
+- **Auto-Refresh** - Detect new library content and update playlists automatically
+- **Playlist Templates** - Pre-configured universe templates for popular franchises
+- **Advanced Filtering** - Filter by genre, rating, release year, etc.
 
 ## Support
 
