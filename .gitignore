@@ -22,6 +22,9 @@ build-output-*/
 # Logs
 *.log
 
+# PowerShell scripts (local testing only)
+*.ps1
+
 # OS files
 .DS_Store
 Thumbs.db
@@ -49,8 +52,6 @@ ROADMAP_*
 *.Tests/
 test/
 tests/
-test-*.ps1
-simple-test.ps1
 API_KEY_SETUP.md
 
 # Development documentation (but keep essential guides)
@@ -68,14 +69,9 @@ release/
 dist/
 publish/
 
-# Deployment scripts (keep build-release.ps1 only)
-deploy-*
-open-*
-
 # === KEEP ONLY THESE FOR PUBLIC REPOSITORY ===
 # ✅ Plugin source code (Jellyfin.Plugin.TimelineManager/)
 # ✅ Sample configurations (configurations/)
-# ✅ Documentation (README.md, LICENSE)
+# ✅ Documentation (README.md, LICENSE, *.md)
 # ✅ Logo/assets (images/)
-# ✅ Build scripts (build-release.ps1)
 # ✅ Plugin manifest (manifest.json)
