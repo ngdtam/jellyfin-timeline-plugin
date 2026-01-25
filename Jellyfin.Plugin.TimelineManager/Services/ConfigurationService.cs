@@ -18,15 +18,22 @@ public class ConfigurationService
     private readonly ILogger<ConfigurationService> _logger;
     private readonly string _configurationPath;
 
+    private readonly UniverseManagementService? _universeManagementService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ConfigurationService"/> class.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
     /// <param name="configurationPath">The path to the configuration file.</param>
-    public ConfigurationService(ILogger<ConfigurationService> logger, string configurationPath = "/config/timeline_manager_config.json")
+    /// <param name="universeManagementService">Optional universe management service for multi-file support.</param>
+    public ConfigurationService(
+        ILogger<ConfigurationService> logger, 
+        string configurationPath = "/config/timeline_manager_config.json",
+        UniverseManagementService? universeManagementService = null)
     {
         _logger = logger;
         _configurationPath = configurationPath;
+        _universeManagementService = universeManagementService;
     }
 
     /// <summary>
@@ -570,6 +577,129 @@ public class ConfigurationService
     {
         var validTypes = new[] { "movie", "episode" };
         return validTypes.Contains(contentType.ToLowerInvariant());
+    }
+
+    /// <summary>
+    /// Loads configuration from selected universe files.
+    /// </summary>
+    /// <param name="selectedFilenames">List of universe filenames to load.</param>
+    /// <returns>The merged configuration from selected universes, or null if loading failed.</returns>
+    public async Task<TimelineConfiguration?> LoadFromUniverseFilesAsync(List<string> selectedFilenames)
+    {
+        try
+        {
+            if (_universeManagementService == null)
+            {
+                _logger.LogError("UniverseManagementService not available for multi-file loading");
+                return null;
+            }
+
+            if (selectedFilenames == null || selectedFilenames.Count == 0)
+            {
+                _logger.LogWarning("No universe filenames provided, loading all universes");
+                return await LoadAllUniversesAsync();
+            }
+
+            _logger.LogInformation("Loading {Count} selected universe files", selectedFilenames.Count);
+
+            var universes = new List<Universe>();
+
+            foreach (var filename in selectedFilenames)
+            {
+                var universe = await _universeManagementService.GetUniverseAsync(filename);
+                if (universe != null)
+                {
+                    universes.Add(universe);
+                    _logger.LogDebug("Loaded universe '{UniverseName}' from {Filename}", universe.Name, filename);
+                }
+                else
+                {
+                    _logger.LogWarning("Failed to load universe from {Filename}", filename);
+                }
+            }
+
+            if (universes.Count == 0)
+            {
+                _logger.LogError("No universes were loaded successfully");
+                return null;
+            }
+
+            var configuration = MergeUniverses(universes);
+            _logger.LogInformation("Successfully loaded {Count} universes from selected files", universes.Count);
+
+            return configuration;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error loading configuration from universe files");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Loads configuration from all available universe files.
+    /// </summary>
+    /// <returns>The merged configuration from all universes, or null if loading failed.</returns>
+    public async Task<TimelineConfiguration?> LoadAllUniversesAsync()
+    {
+        try
+        {
+            if (_universeManagementService == null)
+            {
+                _logger.LogError("UniverseManagementService not available for multi-file loading");
+                return null;
+            }
+
+            _logger.LogInformation("Loading all available universe files");
+
+            var universeMetadata = await _universeManagementService.GetAllUniversesAsync();
+
+            if (universeMetadata.Count == 0)
+            {
+                _logger.LogWarning("No universe files found");
+                return new TimelineConfiguration { Universes = new List<Universe>() };
+            }
+
+            var universes = new List<Universe>();
+
+            foreach (var metadata in universeMetadata)
+            {
+                var universe = await _universeManagementService.GetUniverseAsync(metadata.Filename);
+                if (universe != null)
+                {
+                    universes.Add(universe);
+                }
+            }
+
+            if (universes.Count == 0)
+            {
+                _logger.LogError("No universes were loaded successfully");
+                return null;
+            }
+
+            var configuration = MergeUniverses(universes);
+            _logger.LogInformation("Successfully loaded all {Count} universes", universes.Count);
+
+            return configuration;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error loading all universe files");
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Merges multiple universes into a single configuration.
+    /// </summary>
+    /// <param name="universes">The list of universes to merge.</param>
+    /// <returns>A timeline configuration containing all universes.</returns>
+    private TimelineConfiguration MergeUniverses(List<Universe> universes)
+    {
+        return new TimelineConfiguration
+        {
+            Universes = universes
+        };
     }
 }
 

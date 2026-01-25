@@ -23,21 +23,68 @@
                 </form>
 
                 <div class="verticalSection">
+                    <h2 class="sectionTitle">Universe Manager</h2>
+                    
+                    <div class="inputContainer" style="margin-bottom: 1em;">
+                        <div class="fieldDescription" style="margin-bottom: 1em;">
+                            Select which universes to create playlists for. You can also edit universe configurations directly in the browser.
+                        </div>
+                        
+                        <div id="universeList" style="margin-bottom: 1em;"></div>
+                        
+                        <div style="display: flex; gap: 0.5em; margin-bottom: 1em;">
+                            <button type="button" is="emby-button" id="selectAllBtn" class="emby-button raised">
+                                Select All
+                            </button>
+                            <button type="button" is="emby-button" id="deselectAllBtn" class="emby-button raised">
+                                Deselect All
+                            </button>
+                            <button type="button" is="emby-button" id="refreshUniversesBtn" class="emby-button raised">
+                                Refresh List
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="verticalSection">
                     <h2 class="sectionTitle">Create Playlists</h2>
                     
                     <div class="inputContainer" style="margin-bottom: 1em;">
                         <div class="fieldDescription" style="margin-bottom: 1em;">
-                            Click the button below to create playlists from your timeline configuration.
+                            Click the button below to create playlists from selected universes.
                         </div>
                         
                         <button type="button" is="emby-button" id="createPlaylistsBtn" class="emby-button raised block">
-                            Create Playlists
+                            Create Playlists for Selected Universes
                         </button>
                     </div>
 
                     <div id="statusMessage" style="margin-top: 1em; padding: 1em; border-radius: 4px; display: none;"></div>
                     <div id="outputBox" style="background: #0a0a0a; color: #00ff00; padding: 1em; border-radius: 4px; font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; margin-top: 1em; display: none;"></div>
                     <div id="errorBox" style="background: #2a0000; color: #ff6b6b; padding: 1em; border-radius: 4px; font-family: monospace; white-space: pre-wrap; margin-top: 1em; display: none;"></div>
+                </div>
+
+                <div id="jsonEditorSection" class="verticalSection" style="display: none;">
+                    <h2 class="sectionTitle">Edit Universe: <span id="editorUniverseName"></span></h2>
+                    
+                    <div class="inputContainer" style="margin-bottom: 1em;">
+                        <div class="fieldDescription" style="margin-bottom: 1em;">
+                            Edit the JSON configuration for this universe. Changes will be saved to the file.
+                        </div>
+                        
+                        <textarea id="jsonContent" style="width: 100%; min-height: 400px; font-family: monospace; background: #1a1a1a; color: #e0e0e0; border: 1px solid #444; border-radius: 4px; padding: 1em;"></textarea>
+                        
+                        <div id="validationErrors" style="background: #2a0000; color: #ff6b6b; padding: 1em; border-radius: 4px; margin-top: 1em; display: none;"></div>
+                        
+                        <div style="display: flex; gap: 0.5em; margin-top: 1em;">
+                            <button type="button" is="emby-button" id="saveUniverseBtn" class="emby-button raised">
+                                Save Universe
+                            </button>
+                            <button type="button" is="emby-button" id="cancelEditBtn" class="emby-button raised">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="verticalSection">

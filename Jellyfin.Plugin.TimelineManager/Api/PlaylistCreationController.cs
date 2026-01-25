@@ -42,11 +42,14 @@ public class PlaylistCreationController : ControllerBase
     /// Creates or updates playlists based on the timeline configuration file.
     /// </summary>
     /// <param name="userId">Optional user ID. If not provided, will attempt to extract from authentication context.</param>
+    /// <param name="request">Optional request body containing selected universe filenames.</param>
     /// <returns>The result of the playlist creation operation.</returns>
     [HttpPost("CreatePlaylists")]
     [ProducesResponseType(typeof(PlaylistCreationResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<PlaylistCreationResponse>> CreatePlaylists([FromQuery] Guid? userId = null)
+    public async Task<ActionResult<PlaylistCreationResponse>> CreatePlaylists(
+        [FromQuery] Guid? userId = null,
+        [FromBody] CreatePlaylistsRequest? request = null)
     {
         try
         {
@@ -99,12 +102,26 @@ public class PlaylistCreationController : ControllerBase
 
             // Create the playlist creation service with user ID and auth token
             _logger.LogInformation("[Timeline API] Creating PlaylistCreationService with user ID and auth token...");
+            
+            // Check if selective universe processing is requested
+            var selectedUniverseFilenames = request?.SelectedUniverseFilenames;
+            if (selectedUniverseFilenames != null && selectedUniverseFilenames.Count > 0)
+            {
+                _logger.LogInformation("[Timeline API] Selective universe processing requested for {Count} universes", 
+                    selectedUniverseFilenames.Count);
+            }
+            else
+            {
+                _logger.LogInformation("[Timeline API] Processing all universes (no selection provided)");
+            }
+            
             var service = new PlaylistCreationService(
                 serviceLogger,
                 _playlistManager,
                 _libraryManager,
                 userId: effectiveUserId,
-                authToken: authToken);
+                authToken: authToken,
+                selectedUniverseFilenames: selectedUniverseFilenames);
 
             // Execute playlist creation
             _logger.LogInformation("[Timeline API] Executing CreatePlaylistsAsync...");

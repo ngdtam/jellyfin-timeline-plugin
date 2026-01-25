@@ -25,6 +25,7 @@ public class PlaylistCreationService
     private readonly string? _apiKey;
     private readonly Guid? _userId;
     private readonly string? _authToken;
+    private readonly List<string>? _selectedUniverseFilenames;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PlaylistCreationService"/> class.
@@ -37,6 +38,7 @@ public class PlaylistCreationService
     /// <param name="apiKey">Optional Jellyfin API key for authenticated operations.</param>
     /// <param name="userId">Optional user ID for playlist operations.</param>
     /// <param name="authToken">Optional authentication token for HTTP API calls.</param>
+    /// <param name="selectedUniverseFilenames">Optional list of universe filenames to process selectively.</param>
     public PlaylistCreationService(
         ILogger<PlaylistCreationService> logger,
         MediaBrowser.Controller.Playlists.IPlaylistManager playlistManager,
@@ -45,7 +47,8 @@ public class PlaylistCreationService
         System.Net.Http.IHttpClientFactory? httpClientFactory = null,
         string? apiKey = null,
         Guid? userId = null,
-        string? authToken = null)
+        string? authToken = null,
+        List<string>? selectedUniverseFilenames = null)
     {
         _logger = logger;
         _playlistManager = playlistManager;
@@ -55,6 +58,7 @@ public class PlaylistCreationService
         _apiKey = apiKey;
         _userId = userId;
         _authToken = authToken;
+        _selectedUniverseFilenames = selectedUniverseFilenames;
     }
 
     /// <summary>
@@ -77,8 +81,30 @@ public class PlaylistCreationService
 
             // Load configuration
             var configLogger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<ConfigurationService>();
-            var configService = new ConfigurationService(configLogger, _configurationPath);
-            var configuration = await configService.LoadConfigurationAsync();
+            var universeManagementLogger = LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<UniverseManagementService>();
+            var universeManagementService = new UniverseManagementService(universeManagementLogger);
+            var configService = new ConfigurationService(configLogger, _configurationPath, universeManagementService);
+
+            TimelineConfiguration? configuration;
+
+            // Check if selective universe processing is requested
+            if (_selectedUniverseFilenames != null && _selectedUniverseFilenames.Count > 0)
+            {
+                _logger.LogInformation("Loading {Count} selected universes", _selectedUniverseFilenames.Count);
+                configuration = await configService.LoadFromUniverseFilesAsync(_selectedUniverseFilenames);
+            }
+            else
+            {
+                // Try to load from multi-file format first, fallback to legacy single-file
+                _logger.LogInformation("Attempting to load from multi-file universe format");
+                configuration = await configService.LoadAllUniversesAsync();
+                
+                if (configuration == null || configuration.Universes.Count == 0)
+                {
+                    _logger.LogInformation("No universes found in multi-file format, falling back to legacy single-file format");
+                    configuration = await configService.LoadConfigurationAsync();
+                }
+            }
 
             if (configuration == null)
             {

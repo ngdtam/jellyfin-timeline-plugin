@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Jellyfin.Plugin.TimelineManager.Services;
 using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Model.Plugins;
@@ -34,13 +36,79 @@ public class Plugin : BasePlugin<PluginConfiguration>, IHasWebPages
         _logger.LogInformation("Universal Timeline Manager plugin initialized with ID: {PluginId}", Id);
         _logger.LogDebug("Plugin instance created at {Timestamp}", DateTime.UtcNow);
         
-        // Auto-create default configuration file if it doesn't exist
-        InitializeDefaultConfiguration();
+        // Run migration and initialization asynchronously
+        _ = Task.Run(async () => await InitializePluginAsync());
     }
     
     /// <summary>
-    /// Creates a default configuration file if one doesn't exist.
+    /// Initializes the plugin asynchronously, including migration and default configuration.
     /// </summary>
+    private async Task InitializePluginAsync()
+    {
+        try
+        {
+            _logger.LogInformation("Starting plugin initialization");
+            
+            // Initialize services
+            var universeManagementLogger = LoggerFactory.Create(builder => builder.AddConsole())
+                .CreateLogger<UniverseManagementService>();
+            var universeManagementService = new UniverseManagementService(universeManagementLogger);
+            
+            var migrationLogger = LoggerFactory.Create(builder => builder.AddConsole())
+                .CreateLogger<MigrationService>();
+            var migrationService = new MigrationService(migrationLogger, universeManagementService);
+            
+            // Check if migration is needed
+            var migrationNeeded = await migrationService.IsMigrationNeededAsync();
+            
+            if (migrationNeeded)
+            {
+                _logger.LogInformation("Legacy configuration detected - starting migration to multi-file format");
+                var migrationResult = await migrationService.MigrateAsync();
+                
+                if (migrationResult.Success)
+                {
+                    _logger.LogInformation("Migration completed successfully - migrated {Count} universes", 
+                        migrationResult.UniversesMigrated);
+                    if (migrationResult.BackupCreated)
+                    {
+                        _logger.LogInformation("Legacy configuration backed up successfully");
+                    }
+                }
+                else
+                {
+                    _logger.LogError("Migration failed: {Errors}", string.Join(", ", migrationResult.Errors));
+                }
+            }
+            else
+            {
+                _logger.LogDebug("No migration needed");
+            }
+            
+            // Check if universes directory is empty and create example if needed
+            var universes = await universeManagementService.GetAllUniversesAsync();
+            if (universes.Count == 0)
+            {
+                _logger.LogInformation("No universe files found - creating example universe");
+                await migrationService.CreateExampleUniverseAsync();
+            }
+            else
+            {
+                _logger.LogInformation("Found {Count} universe files", universes.Count);
+            }
+            
+            _logger.LogInformation("Plugin initialization completed successfully");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during plugin initialization");
+        }
+    }
+    
+    /// <summary>
+    /// Creates a default configuration file if one doesn't exist (legacy method - kept for backward compatibility).
+    /// </summary>
+    [Obsolete("This method is deprecated. Migration and initialization now handled in InitializePluginAsync.")]
     private void InitializeDefaultConfiguration()
     {
         try
