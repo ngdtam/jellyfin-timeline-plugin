@@ -1,3 +1,4 @@
+using Jellyfin.Plugin.TimelineManager.ScheduledTasks;
 using Jellyfin.Plugin.TimelineManager.Services;
 using MediaBrowser.Common;
 using MediaBrowser.Controller;
@@ -35,5 +36,8 @@ public sealed class ServiceRegistrator : IPluginServiceRegistrator
         
         // Register HttpClientFactory if not already registered
         serviceCollection.AddHttpClient();
+        
+        // Register scheduled task for automatic playlist updates
+        serviceCollection.AddSingleton<MediaBrowser.Model.Tasks.IScheduledTask, UpdateTimelinePlaylistsTask>();
     }
 }
