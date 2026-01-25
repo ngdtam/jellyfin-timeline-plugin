@@ -1,6 +1,51 @@
 // Universal Timeline Manager - Configuration Page JavaScript
 console.log('=== TIMELINE MANAGER SCRIPT LOADED ===');
 
+// ===== TAB NAVIGATION =====
+
+// Function to switch between tabs
+function switchTab(tabName) {
+    console.log('Switching to tab:', tabName);
+    
+    // Hide all tab panes
+    document.querySelectorAll('.tab-pane').forEach(function(pane) {
+        pane.style.display = 'none';
+    });
+    
+    // Remove active class from all buttons
+    document.querySelectorAll('.tab-button').forEach(function(button) {
+        button.classList.remove('active');
+        button.style.background = '#2a2a2a';
+    });
+    
+    // Show selected tab pane
+    var selectedPane = document.getElementById(tabName + '-tab');
+    if (selectedPane) {
+        selectedPane.style.display = 'block';
+    }
+    
+    // Add active class to selected button
+    var selectedButton = document.querySelector('[data-tab="' + tabName + '"]');
+    if (selectedButton) {
+        selectedButton.classList.add('active');
+        selectedButton.style.background = '#00a4dc';
+    }
+}
+
+// Initialize tab navigation on page load
+setTimeout(function() {
+    var tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var tabName = this.getAttribute('data-tab');
+            switchTab(tabName);
+        });
+    });
+    
+    // Set Tab 1 as default active tab
+    switchTab('universe-management');
+}, 500);
+
 // Initialize on page load
 (function() {
     console.log('Script executing...');
@@ -770,8 +815,114 @@ var PlaylistCreatorUI = {
     },
     isEditing: false,
     originalFilename: null,
-    searchTimeout: null
+    searchTimeout: null,
+    currentSearchSource: 'jellyfin' // Default to Jellyfin Library
 };
+
+// Set search source (jellyfin or tmdb)
+function setSearchSource(source) {
+    console.log('Setting search source to:', source);
+    
+    PlaylistCreatorUI.currentSearchSource = source;
+    
+    // Update button styles
+    var buttons = document.querySelectorAll('.search-source-toggle');
+    buttons.forEach(function(button) {
+        if (button.dataset.source === source) {
+            button.classList.add('active');
+            button.style.background = source === 'jellyfin' ? '#00a4dc' : '#01b4e4';
+        } else {
+            button.classList.remove('active');
+            button.style.background = '#2a2a2a';
+        }
+    });
+    
+    // Update indicator text
+    var indicator = document.getElementById('searchSourceIndicator');
+    if (indicator) {
+        indicator.innerHTML = 'Searching in: <strong>' + (source === 'jellyfin' ? 'Jellyfin Library' : 'TMDB') + '</strong>';
+    }
+    
+    // Clear search results when source changes
+    var searchResults = document.getElementById('searchResults');
+    if (searchResults) {
+        searchResults.style.display = 'none';
+        searchResults.innerHTML = '';
+    }
+    
+    // Clear search input
+    var searchInput = document.getElementById('contentSearchInput');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+}
+
+// Search TMDB for movies
+function searchTmdbMovies(query, limit) {
+    var apiKey = ApiClient.accessToken();
+    
+    return fetch('/Timeline/Search/Tmdb/Movies?query=' + encodeURIComponent(query) + '&limit=' + limit, {
+        headers: {
+            'X-Emby-Token': apiKey
+        }
+    })
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error('TMDB movie search failed: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        return data.results || [];
+    });
+}
+
+// Search TMDB for TV shows
+function searchTmdbTvShows(query, limit) {
+    var apiKey = ApiClient.accessToken();
+    
+    return fetch('/Timeline/Search/Tmdb/Tv?query=' + encodeURIComponent(query) + '&limit=' + limit, {
+        headers: {
+            'X-Emby-Token': apiKey
+        }
+    })
+    .then(function(response) {
+        if (!response.ok) {
+            throw new Error('TMDB TV search failed: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(function(data) {
+        return data.results || [];
+    });
+}
+
+// Search TMDB for both movies and TV shows
+function searchTmdbContent(query, limit) {
+    return Promise.all([
+        searchTmdbMovies(query, limit),
+        searchTmdbTvShows(query, limit)
+    ])
+    .then(function(results) {
+        var movies = results[0];
+        var tvShows = results[1];
+        
+        // Tag all results with source: 'tmdb'
+        var allResults = [];
+        
+        movies.forEach(function(movie) {
+            movie.source = 'tmdb';
+            allResults.push(movie);
+        });
+        
+        tvShows.forEach(function(tvShow) {
+            tvShow.source = 'tmdb';
+            allResults.push(tvShow);
+        });
+        
+        return allResults;
+    });
+}
 
 // Initialize new playlist
 function initializeNewPlaylist() {
@@ -839,22 +990,40 @@ function performSearch() {
         searchResults.innerHTML = '<div class="fieldDescription">Searching...</div>';
         searchResults.style.display = 'block';
         
-        var apiKey = ApiClient.accessToken();
+        var searchPromise;
         
-        fetch('/Timeline/Search?query=' + encodeURIComponent(query) + '&limit=10', {
-            headers: {
-                'X-Emby-Token': apiKey
-            }
-        })
-        .then(function(response) {
-            return response.json();
-        })
-        .then(function(data) {
-            renderSearchResults(data.results);
-        })
-        .catch(function(error) {
-            searchResults.innerHTML = '<div class="fieldDescription" style="color: #ff6b6b;">Error searching: ' + error.message + '</div>';
-        });
+        if (PlaylistCreatorUI.currentSearchSource === 'tmdb') {
+            // Search TMDB
+            searchPromise = searchTmdbContent(query, 10);
+        } else {
+            // Search Jellyfin Library
+            var apiKey = ApiClient.accessToken();
+            searchPromise = fetch('/Timeline/Search?query=' + encodeURIComponent(query) + '&limit=10', {
+                headers: {
+                    'X-Emby-Token': apiKey
+                }
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                // Tag Jellyfin results with source: 'jellyfin'
+                var results = data.results || [];
+                results.forEach(function(result) {
+                    result.source = 'jellyfin';
+                });
+                return results;
+            });
+        }
+        
+        searchPromise
+            .then(function(results) {
+                renderSearchResults(results);
+            })
+            .catch(function(error) {
+                console.error('Search error:', error);
+                searchResults.innerHTML = '<div class="fieldDescription" style="color: #ff6b6b;">Error searching: ' + error.message + '</div>';
+            });
     }, 300);
 }
 
@@ -892,9 +1061,32 @@ function renderSearchResults(results) {
             this.style.background = '';
         };
         
+        // Add source badge
+        var sourceBadge = document.createElement('span');
+        sourceBadge.style.display = 'inline-block';
+        sourceBadge.style.padding = '0.2em 0.5em';
+        sourceBadge.style.borderRadius = '3px';
+        sourceBadge.style.fontSize = '0.85em';
+        sourceBadge.style.fontWeight = 'bold';
+        sourceBadge.style.marginRight = '0.5em';
+        
+        if (result.source === 'tmdb') {
+            sourceBadge.style.background = '#01b4e4';
+            sourceBadge.style.color = 'white';
+            sourceBadge.textContent = '🎬 TMDB';
+        } else {
+            sourceBadge.style.background = '#00a4dc';
+            sourceBadge.style.color = 'white';
+            sourceBadge.textContent = '📁 Jellyfin';
+        }
+        
         var title = document.createElement('div');
         title.style.fontWeight = '500';
-        title.textContent = result.title + (result.year ? ' (' + result.year + ')' : '');
+        title.appendChild(sourceBadge);
+        
+        var titleText = document.createElement('span');
+        titleText.textContent = result.title + (result.year ? ' (' + result.year + ')' : '');
+        title.appendChild(titleText);
         
         var details = document.createElement('div');
         details.className = 'fieldDescription';
@@ -905,11 +1097,13 @@ function renderSearchResults(results) {
                 detailsText += ' S' + result.seasonNumber;
             }
         }
-        if (result.providerIds.tmdb) {
-            detailsText += ' • TMDB: ' + result.providerIds.tmdb;
-        }
-        if (result.providerIds.imdb) {
-            detailsText += ' • IMDB: ' + result.providerIds.imdb;
+        if (result.providerIds) {
+            if (result.providerIds.tmdb) {
+                detailsText += ' • TMDB: ' + result.providerIds.tmdb;
+            }
+            if (result.providerIds.imdb) {
+                detailsText += ' • IMDB: ' + result.providerIds.imdb;
+            }
         }
         details.textContent = detailsText;
         
@@ -929,34 +1123,70 @@ function renderSearchResults(results) {
 // Select search result and add to playlist
 function selectSearchResult(result) {
     var season = null;
+    var providerId = null;
+    var providerName = null;
+    var itemType = null;
     
-    if (result.type === 'Episode') {
-        var seasonInput = prompt('Enter season number for this episode:', result.seasonNumber || '1');
-        if (seasonInput === null) {
-            return; // User cancelled
+    // Handle TMDB items
+    if (result.source === 'tmdb') {
+        // For TMDB items, the providerId is directly in the result
+        providerId = result.providerIds && result.providerIds.tmdb ? result.providerIds.tmdb : null;
+        providerName = 'tmdb';
+        
+        // Determine type based on result.type
+        if (result.type === 'Movie') {
+            itemType = 'movie';
+        } else if (result.type === 'Series' || result.type === 'Episode') {
+            itemType = 'episode';
+            
+            // Prompt for season number for TV shows
+            var seasonInput = prompt('Enter season number for this TV show:', '1');
+            if (seasonInput === null) {
+                return; // User cancelled
+            }
+            season = parseInt(seasonInput);
+            if (isNaN(season) || season < 1) {
+                alert('Invalid season number');
+                return;
+            }
         }
-        season = parseInt(seasonInput);
-        if (isNaN(season) || season < 1) {
-            alert('Invalid season number');
+        
+        if (!providerId) {
+            alert('This TMDB item has no ID and cannot be added to the playlist');
             return;
         }
-    }
-    
-    // Determine provider ID to use (prefer TMDB, fallback to IMDB)
-    var providerId = result.providerIds.tmdb || result.providerIds.imdb;
-    var providerName = result.providerIds.tmdb ? 'tmdb' : 'imdb';
-    
-    if (!providerId) {
-        alert('This item has no provider ID and cannot be added to the playlist');
-        return;
+    } else {
+        // Handle Jellyfin items (existing logic)
+        if (result.type === 'Episode') {
+            var seasonInput = prompt('Enter season number for this episode:', result.seasonNumber || '1');
+            if (seasonInput === null) {
+                return; // User cancelled
+            }
+            season = parseInt(seasonInput);
+            if (isNaN(season) || season < 1) {
+                alert('Invalid season number');
+                return;
+            }
+        }
+        
+        // Determine provider ID to use (prefer TMDB, fallback to IMDB)
+        providerId = result.providerIds.tmdb || result.providerIds.imdb;
+        providerName = result.providerIds.tmdb ? 'tmdb' : 'imdb';
+        itemType = result.type.toLowerCase();
+        
+        if (!providerId) {
+            alert('This item has no provider ID and cannot be added to the playlist');
+            return;
+        }
     }
     
     var item = {
         providerId: providerId,
         providerName: providerName,
-        type: result.type.toLowerCase(),
+        type: itemType,
         title: result.title,
-        year: result.year
+        year: result.year,
+        _displaySource: result.source || 'jellyfin' // Store source for display
     };
     
     if (season !== null) {
@@ -1016,6 +1246,25 @@ function renderItemsList() {
         position.style.marginRight = '0.5em';
         position.textContent = (index + 1) + '.';
         
+        // Add source badge
+        var sourceBadge = document.createElement('span');
+        sourceBadge.style.display = 'inline-block';
+        sourceBadge.style.padding = '0.2em 0.5em';
+        sourceBadge.style.borderRadius = '3px';
+        sourceBadge.style.fontSize = '0.75em';
+        sourceBadge.style.fontWeight = 'bold';
+        sourceBadge.style.marginRight = '0.5em';
+        
+        if (item._displaySource === 'tmdb') {
+            sourceBadge.style.background = '#01b4e4';
+            sourceBadge.style.color = 'white';
+            sourceBadge.textContent = '🎬 TMDB';
+        } else {
+            sourceBadge.style.background = '#00a4dc';
+            sourceBadge.style.color = 'white';
+            sourceBadge.textContent = '📁 Jellyfin';
+        }
+        
         var title = document.createElement('span');
         title.textContent = item.title + (item.year ? ' (' + item.year + ')' : '');
         
@@ -1029,6 +1278,7 @@ function renderItemsList() {
         details.textContent = detailsText;
         
         info.appendChild(position);
+        info.appendChild(sourceBadge);
         info.appendChild(title);
         info.appendChild(document.createElement('br'));
         info.appendChild(details);
@@ -1167,6 +1417,7 @@ function savePlaylist() {
             if (item.season) {
                 cleanItem.season = item.season;
             }
+            // Don't include _displaySource, title, year - they're only for UI
             return cleanItem;
         })
     };
@@ -1339,6 +1590,15 @@ setTimeout(function() {
         createNewBtn.addEventListener('click', initializeNewPlaylist);
     }
     
+    // Search source toggle buttons
+    var searchSourceButtons = document.querySelectorAll('.search-source-toggle');
+    searchSourceButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            var source = this.dataset.source;
+            setSearchSource(source);
+        });
+    });
+    
     var searchInput = document.getElementById('contentSearchInput');
     if (searchInput) {
         searchInput.addEventListener('input', performSearch);
@@ -1373,5 +1633,138 @@ setTimeout(function() {
     var cancelBtn = document.getElementById('cancelPlaylistBtn');
     if (cancelBtn) {
         cancelBtn.addEventListener('click', cancelPlaylistCreation);
+    }
+}, 500);
+
+// ===== TMDB SETTINGS =====
+
+// Load TMDB settings
+function loadTmdbSettings() {
+    console.log('Loading TMDB settings');
+    
+    try {
+        // Use ApiClient's getPluginConfiguration method with the plugin's GUID
+        var pluginId = '12345678-1234-5678-9abc-123456789012';
+        
+        ApiClient.getPluginConfiguration(pluginId)
+            .then(function(config) {
+                console.log('TMDB settings loaded:', config);
+                
+                var tmdbApiKeyInput = document.getElementById('tmdbApiKey');
+                if (tmdbApiKeyInput && config.TmdbApiKey) {
+                    tmdbApiKeyInput.value = config.TmdbApiKey;
+                }
+                
+                // Update TMDB toggle visibility based on API key
+                updateTmdbToggleVisibility(config.TmdbApiKey);
+            })
+            .catch(function(error) {
+                console.error('Error loading TMDB settings:', error);
+                // If plugin config doesn't exist yet, that's okay - just use defaults
+                updateTmdbToggleVisibility('');
+            });
+    } catch (error) {
+        console.error('Exception loading TMDB settings:', error);
+    }
+}
+
+// Save TMDB settings
+function saveTmdbSettings() {
+    console.log('Saving TMDB settings');
+    
+    var tmdbApiKeyInput = document.getElementById('tmdbApiKey');
+    var saveBtn = document.getElementById('saveTmdbSettingsBtn');
+    var statusMessage = document.getElementById('tmdbSettingsMessage');
+    
+    if (!tmdbApiKeyInput) {
+        return;
+    }
+    
+    var tmdbApiKey = tmdbApiKeyInput.value.trim();
+    var pluginId = '12345678-1234-5678-9abc-123456789012';
+    
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Saving...';
+    
+    try {
+        // Get current configuration first
+        ApiClient.getPluginConfiguration(pluginId)
+            .then(function(config) {
+                // Update TMDB API key
+                config.TmdbApiKey = tmdbApiKey;
+                
+                // Save configuration using ApiClient
+                return ApiClient.updatePluginConfiguration(pluginId, config);
+            })
+            .then(function() {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save TMDB Settings';
+                
+                statusMessage.style.display = 'block';
+                statusMessage.style.background = '#1e5631';
+                statusMessage.style.color = '#fff';
+                statusMessage.textContent = 'TMDB settings saved successfully!';
+                
+                // Update TMDB toggle visibility
+                updateTmdbToggleVisibility(tmdbApiKey);
+                
+                setTimeout(function() {
+                    statusMessage.style.display = 'none';
+                }, 3000);
+            })
+            .catch(function(error) {
+                console.error('Error saving TMDB settings:', error);
+                
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save TMDB Settings';
+                
+                statusMessage.style.display = 'block';
+                statusMessage.style.background = '#5a1a1a';
+                statusMessage.style.color = '#ff6b6b';
+                statusMessage.textContent = 'Error saving TMDB settings: ' + error.message;
+            });
+    } catch (error) {
+        console.error('Exception saving TMDB settings:', error);
+        
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save TMDB Settings';
+        
+        statusMessage.style.display = 'block';
+        statusMessage.style.background = '#5a1a1a';
+        statusMessage.style.color = '#ff6b6b';
+        statusMessage.textContent = 'Error: ' + error.message;
+    }
+}
+
+// Update TMDB toggle visibility based on API key
+function updateTmdbToggleVisibility(tmdbApiKey) {
+    var tmdbToggleButton = document.getElementById('searchSourceTmdb');
+    var searchSourceIndicator = document.getElementById('searchSourceIndicator');
+    
+    if (!tmdbToggleButton) {
+        return;
+    }
+    
+    if (!tmdbApiKey || tmdbApiKey.trim() === '') {
+        // Hide TMDB toggle if no API key
+        tmdbToggleButton.style.display = 'none';
+        
+        // If TMDB was selected, switch back to Jellyfin
+        if (PlaylistCreatorUI.currentSearchSource === 'tmdb') {
+            setSearchSource('jellyfin');
+        }
+    } else {
+        // Show TMDB toggle if API key is configured
+        tmdbToggleButton.style.display = 'inline-block';
+    }
+}
+
+// Initialize TMDB settings on page load
+setTimeout(function() {
+    loadTmdbSettings();
+    
+    var saveTmdbBtn = document.getElementById('saveTmdbSettingsBtn');
+    if (saveTmdbBtn) {
+        saveTmdbBtn.addEventListener('click', saveTmdbSettings);
     }
 }, 500);

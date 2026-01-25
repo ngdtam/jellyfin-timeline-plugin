@@ -29,5 +29,11 @@ public sealed class ServiceRegistrator : IPluginServiceRegistrator
         
         // Register ContentSearchService as singleton
         serviceCollection.AddSingleton<ContentSearchService>();
+        
+        // Register TmdbSearchService as singleton
+        serviceCollection.AddSingleton<TmdbSearchService>();
+        
+        // Register HttpClientFactory if not already registered
+        serviceCollection.AddHttpClient();
     }
 }

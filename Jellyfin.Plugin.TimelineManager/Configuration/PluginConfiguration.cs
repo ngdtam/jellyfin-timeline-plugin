@@ -12,6 +12,11 @@ public class PluginConfiguration : BasePluginConfiguration
     /// </summary>
     public PluginConfiguration()
     {
-        // Configuration properties can be added here in the future
+        TmdbApiKey = string.Empty;
     }
+
+    /// <summary>
+    /// Gets or sets the TMDB API key for searching external content.
+    /// </summary>
+    public string TmdbApiKey { get; set; }
 }
