@@ -91,6 +91,84 @@ public class TimelineConfigController : ControllerBase
     }
 
     /// <summary>
+    /// Gets the TMDB API key from plugin configuration.
+    /// </summary>
+    /// <returns>The TMDB API key configuration.</returns>
+    [HttpGet("Settings/Tmdb")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public ActionResult<TmdbSettingsResponse> GetTmdbSettings()
+    {
+        try
+        {
+            _logger.LogInformation("[Timeline API] GetTmdbSettings called");
+            
+            var config = Plugin.Instance?.Configuration;
+            if (config == null)
+            {
+                _logger.LogWarning("Plugin configuration is null");
+                return Ok(new TmdbSettingsResponse { TmdbApiKey = string.Empty });
+            }
+
+            return Ok(new TmdbSettingsResponse 
+            { 
+                TmdbApiKey = config.TmdbApiKey ?? string.Empty 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting TMDB settings");
+            return Ok(new TmdbSettingsResponse { TmdbApiKey = string.Empty });
+        }
+    }
+
+    /// <summary>
+    /// Saves the TMDB API key to plugin configuration.
+    /// </summary>
+    /// <param name="request">The TMDB settings request.</param>
+    /// <returns>Save result.</returns>
+    [HttpPost("Settings/Tmdb")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public ActionResult<TmdbSettingsSaveResponse> SaveTmdbSettings([FromBody] TmdbSettingsRequest request)
+    {
+        try
+        {
+            _logger.LogInformation("[Timeline API] SaveTmdbSettings called");
+            
+            if (Plugin.Instance == null)
+            {
+                _logger.LogError("Plugin instance is null");
+                return Ok(new TmdbSettingsSaveResponse 
+                { 
+                    Success = false, 
+                    Message = "Plugin instance not available" 
+                });
+            }
+
+            var config = Plugin.Instance.Configuration;
+            config.TmdbApiKey = request.TmdbApiKey ?? string.Empty;
+            
+            Plugin.Instance.SaveConfiguration();
+            
+            _logger.LogInformation("TMDB API key saved successfully");
+            
+            return Ok(new TmdbSettingsSaveResponse 
+            { 
+                Success = true, 
+                Message = "TMDB settings saved successfully" 
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error saving TMDB settings");
+            return Ok(new TmdbSettingsSaveResponse 
+            { 
+                Success = false, 
+                Message = $"Error saving TMDB settings: {ex.Message}" 
+            });
+        }
+    }
+
+    /// <summary>
     /// Validates the provided timeline configuration.
     /// </summary>
     /// <param name="request">The configuration validation request.</param>
@@ -479,4 +557,42 @@ public class SaveResponse
     /// Gets or sets any errors that occurred.
     /// </summary>
     public string[] Errors { get; set; } = Array.Empty<string>();
+}
+
+/// <summary>
+/// Request model for TMDB settings operations.
+/// </summary>
+public class TmdbSettingsRequest
+{
+    /// <summary>
+    /// Gets or sets the TMDB API key.
+    /// </summary>
+    public string TmdbApiKey { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Response model for TMDB settings retrieval.
+/// </summary>
+public class TmdbSettingsResponse
+{
+    /// <summary>
+    /// Gets or sets the TMDB API key.
+    /// </summary>
+    public string TmdbApiKey { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Response model for TMDB settings save operations.
+/// </summary>
+public class TmdbSettingsSaveResponse
+{
+    /// <summary>
+    /// Gets or sets a value indicating whether the save was successful.
+    /// </summary>
+    public bool Success { get; set; }
+
+    /// <summary>
+    /// Gets or sets the response message.
+    /// </summary>
+    public string Message { get; set; } = string.Empty;
 }
