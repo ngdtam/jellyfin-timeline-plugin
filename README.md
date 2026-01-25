@@ -150,7 +150,12 @@ Check the `configurations/` folder for ready-to-use examples:
 
 ## Changelog
 
-### v0.8.0 (Latest)
+### v0.8.1 (Latest)
+- Fixed API endpoint URLs for Jellyfin instances with custom base paths
+- Resolves errors when accessing plugin from external servers
+- All JavaScript fetch calls now use proper URL construction
+
+### v0.8.0
 - Scheduled task for automatic playlist updates
 - Appears in Dashboard > Scheduled Tasks
 - Default schedule: Daily at 3:00 AM (customizable)
