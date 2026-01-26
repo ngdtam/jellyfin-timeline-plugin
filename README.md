@@ -150,7 +150,12 @@ Check the `configurations/` folder for ready-to-use examples:
 
 ## Changelog
 
-### v0.8.1 (Latest)
+### v0.8.2 (Latest)
+- Fixed scheduled task TypeLoadException error
+- Removed IUserManager dependency
+- Playlists created by scheduled task are now public
+
+### v0.8.1
 - Fixed API endpoint URLs for Jellyfin instances with custom base paths
 - Resolves errors when accessing plugin from external servers
 - All JavaScript fetch calls now use proper URL construction
