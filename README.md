@@ -1,5 +1,7 @@
 # Universal Timeline Manager
 
+> **Note:** This repository is currently archived. The plugin is functional and stable at v0.8.3. Development will resume when time permits.
+
 **Watch your favorite movie universes in chronological order!**
 
 A Jellyfin plugin that creates playlists for cinematic universes (Marvel, DC, Star Wars, etc.) in timeline order instead of release order.
