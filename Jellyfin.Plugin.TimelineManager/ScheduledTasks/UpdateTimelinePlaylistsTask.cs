@@ -94,8 +94,43 @@ public class UpdateTimelinePlaylistsTask : IScheduledTask
                         universeMetadata.Name, processedUniverses + 1, totalUniverses);
                     
                     // Get first user ID for playlist creation (required by Jellyfin)
-                    // We'll use Guid.Empty which will cause PlaylistCreationService to use the first available user
-                    var firstUserId = Guid.Empty;
+                    // We need to find an existing playlist to get a valid user ID
+                    Guid firstUserId = Guid.Empty;
+                    
+                    try
+                    {
+                        // Get all items and find a playlist
+                        var allItems = _libraryManager.GetItemsResult(new MediaBrowser.Controller.Entities.InternalItemsQuery
+                        {
+                            Recursive = true
+                        });
+                        
+                        foreach (var item in allItems.Items)
+                        {
+                            if (item is MediaBrowser.Controller.Playlists.Playlist playlist)
+                            {
+                                // Try to get user ID from playlist shares
+                                if (playlist.Shares != null && playlist.Shares.Count > 0)
+                                {
+                                    firstUserId = playlist.Shares[0].UserId;
+                                    _logger.LogDebug("[UpdateTimelinePlaylists] Found user ID from playlist '{Name}': {UserId}", 
+                                        playlist.Name, firstUserId);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "[UpdateTimelinePlaylists] Could not get user ID from existing playlists");
+                    }
+                    
+                    if (firstUserId == Guid.Empty)
+                    {
+                        _logger.LogError("[UpdateTimelinePlaylists] Could not determine user ID. Please create at least one playlist manually first, then the scheduled task will work.");
+                        failureCount++;
+                        continue;
+                    }
                     
                     // Create playlist using PlaylistCreationService with selective universe processing
                     var playlistService = new PlaylistCreationService(
