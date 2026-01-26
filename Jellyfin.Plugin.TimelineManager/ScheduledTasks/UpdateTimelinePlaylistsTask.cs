@@ -20,7 +20,6 @@ public class UpdateTimelinePlaylistsTask : IScheduledTask
     private readonly ILogger<UpdateTimelinePlaylistsTask> _logger;
     private readonly ILibraryManager _libraryManager;
     private readonly IPlaylistManager _playlistManager;
-    private readonly IUserManager _userManager;
     private readonly UniverseManagementService _universeManagementService;
 
     /// <summary>
@@ -29,19 +28,16 @@ public class UpdateTimelinePlaylistsTask : IScheduledTask
     /// <param name="logger">The logger instance.</param>
     /// <param name="libraryManager">The library manager.</param>
     /// <param name="playlistManager">The playlist manager.</param>
-    /// <param name="userManager">The user manager.</param>
     /// <param name="universeManagementService">The universe management service.</param>
     public UpdateTimelinePlaylistsTask(
         ILogger<UpdateTimelinePlaylistsTask> logger,
         ILibraryManager libraryManager,
         IPlaylistManager playlistManager,
-        IUserManager userManager,
         UniverseManagementService universeManagementService)
     {
         _logger = logger;
         _libraryManager = libraryManager;
         _playlistManager = playlistManager;
-        _userManager = userManager;
         _universeManagementService = universeManagementService;
     }
 
@@ -97,21 +93,16 @@ public class UpdateTimelinePlaylistsTask : IScheduledTask
                     _logger.LogInformation("[UpdateTimelinePlaylists] Processing universe '{Name}' ({Current}/{Total})", 
                         universeMetadata.Name, processedUniverses + 1, totalUniverses);
                     
-                    // Get first user for playlist creation (required by Jellyfin)
-                    var users = _userManager.Users.ToList();
-                    if (users.Count == 0)
-                    {
-                        _logger.LogError("[UpdateTimelinePlaylists] No users found in library, cannot create playlists");
-                        failureCount++;
-                        continue;
-                    }
+                    // Get first user ID for playlist creation (required by Jellyfin)
+                    // We'll use Guid.Empty which will cause PlaylistCreationService to use the first available user
+                    var firstUserId = Guid.Empty;
                     
                     // Create playlist using PlaylistCreationService with selective universe processing
                     var playlistService = new PlaylistCreationService(
                         LoggerFactory.Create(builder => builder.AddConsole()).CreateLogger<PlaylistCreationService>(),
                         _playlistManager,
                         _libraryManager,
-                        userId: users[0].Id,
+                        userId: firstUserId,
                         selectedUniverseFilenames: new List<string> { universeMetadata.Filename });
                     
                     var response = await playlistService.CreatePlaylistsAsync();

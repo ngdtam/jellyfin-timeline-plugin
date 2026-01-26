@@ -10,6 +10,14 @@
     "repositoryUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin",
     "versions": [
       {
+        "version": "0.8.2",
+        "changelog": "## v0.8.2 - Bug Fix: Scheduled Task User Loading\n\n### Bug Fixes\n- Fixed TypeLoadException in scheduled task when loading user entities\n- Removed dependency on Jellyfin.Data.Entities.User type\n- Scheduled task now works without requiring IUserManager\n- Playlists created by scheduled task are now public and visible to all users\n\n### Technical Details\n- Removed IUserManager dependency from UpdateTimelinePlaylistsTask\n- Uses Guid.Empty for userId which creates public playlists\n- Resolves compatibility issues with different Jellyfin versions\n\n**Requirements:** Jellyfin 10.10.0+",
+        "targetAbi": "10.10.0.0",
+        "sourceUrl": "https://github.com/ngdtam/jellyfin-timeline-plugin/releases/download/v0.8.2/jellyfin-timeline-manager-0.8.2.zip",
+        "checksum": "22E435E1446646A398322FEB23130C39",
+        "timestamp": "2026-01-26T05:00:00Z"
+      },
+      {
         "version": "0.8.1",
         "changelog": "## v0.8.1 - Bug Fix: Base Path Support\n\n### Bug Fixes\n- Fixed API endpoint URLs to work with Jellyfin base paths (e.g., /jellyfin)\n- All fetch() calls now use ApiClient.getUrl() for proper URL construction\n- Resolves \"Unexpected token '<'\" errors when plugin is accessed from external servers\n- Fixes TMDB search, playlist creation, and universe management on non-root installations\n\n### Technical Details\n- Updated all JavaScript fetch calls to use ApiClient.getUrl()\n- Ensures compatibility with Jellyfin instances using custom base paths\n- No backend changes required\n\n**Requirements:** Jellyfin 10.10.0+",
         "targetAbi": "10.10.0.0",
