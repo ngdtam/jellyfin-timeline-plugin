@@ -150,7 +150,12 @@ Check the `configurations/` folder for ready-to-use examples:
 
 ## Changelog
 
-### v0.8.2 (Latest)
+### v0.8.3 (Latest)
+- Fixed scheduled task user ID resolution
+- Task now finds user ID from existing playlists
+- Requires at least one playlist to exist before scheduled task runs
+
+### v0.8.2
 - Fixed scheduled task TypeLoadException error
 - Removed IUserManager dependency
 - Playlists created by scheduled task are now public
